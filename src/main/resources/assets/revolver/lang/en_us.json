@@ -2,8 +2,8 @@
   "item.revolver.revolver": "Revolver",
   "item.revolver.revolver.balas": "Rounds: %s of 6",
   "item.revolver.cartucho_45": ".45 Cartridge",
-  "key.categories.revolver": "Revolver",
-  "key.revolver.recarregar": "Reload revolver",
+  "key.categories.revolver": "Guns",
+  "key.revolver.recarregar": "Reload gun",
   "subtitles.revolver.tiro": "Revolver fires",
   "subtitles.revolver.engatilhar": "Hammer cocks",
   "subtitles.revolver.clique_seco": "Revolver dry-fires",
@@ -15,5 +15,16 @@
   "item.revolver.cartucho_45_diamante": ".45 Diamond Cartridge",
   "item.revolver.cartucho_45_netherite": ".45 Netherite Cartridge",
   "item.revolver.cartucho.dano": "Damage: %s",
-  "item.revolver.revolver.tipo": "%s × %s (damage %s)"
+  "item.revolver.revolver.tipo": "%s × %s (damage %s)",
+  "item.revolver.deagle": "Desert Eagle",
+  "item.revolver.deagle.balas": "Rounds: %s in the magazine, %s in the chamber",
+  "item.revolver.cartucho_50": ".50 AE Cartridge",
+  "item.revolver.cartucho_50_aco": ".50 AE Steel Cartridge",
+  "item.revolver.cartucho_50_diamante": ".50 AE Diamond Cartridge",
+  "item.revolver.cartucho_50_netherite": ".50 AE Netherite Cartridge",
+  "subtitles.revolver.tiro_deagle": "Desert Eagle fires",
+  "subtitles.revolver.ferrolho": "Slide closes",
+  "subtitles.revolver.trava": "Slide locks back",
+  "subtitles.revolver.pente_sai": "Magazine drops",
+  "subtitles.revolver.pente_entra": "Magazine seats"
 }

@@ -1,5 +1,6 @@
-"""Gera os sons do revólver e grava em OGG Vorbis, que é o que o Minecraft aceita. O tiro e a bala entrando
-vêm dos arquivos que o Felipe baixou (ferramentas/sons-baixados, fora do git); o resto é síntese.
+"""Gera os sons do revólver e da deagle e grava em OGG Vorbis, que é o que o Minecraft aceita. O tiro, a bala
+entrando no tambor e, na deagle, o pente entrando e o ferrolho vêm dos arquivos que o Felipe baixou
+(ferramentas/sons-baixados, fora do git); o resto é síntese.
 
     .venv\\Scripts\\python.exe ferramentas\\gerar_sons.py
 
@@ -157,6 +158,47 @@ def bala_baixada(_semente):
     return alto(ler_arquivo(BAIXADOS / "uzi-reload.mp3", 0.04, 0.34), 1.8)
 
 
+def mais_grave(x, fator):
+    """Toca mais devagar (mais grave e mais longo), por interpolação: o tiro da .50 é mais pesado que o do .45."""
+    n = int(x.size / fator)
+    return np.interp(np.arange(n) * fator, np.arange(x.size), x)
+
+
+def tiro_deagle(_semente):
+    # o mesmo tiro baixado, 18% mais grave e com o estalo de cima um pouco abafado
+    x = mais_grave(ler_arquivo(BAIXADOS / "tiro.mp3", 0.0, 1.5, desce=0.6), 0.82)
+    return alto(0.75 * x + 0.25 * passa_baixa(x, 1800), 2.6)
+
+
+def pente_entra_baixado(_semente):
+    # o segundo dos três sons do uzi-reload.mp3 (1,67 s): o pente encaixando
+    return alto(ler_arquivo(BAIXADOS / "uzi-reload.mp3", 1.64, 1.95), 1.8)
+
+
+def ferrolho_baixado(_semente):
+    # o terceiro (2,63 s): o ferrolho batendo para a frente
+    return alto(ler_arquivo(BAIXADOS / "uzi-reload.mp3", 2.60, 3.06), 1.8)
+
+
+def pente_sai(semente):
+    """O botão estala e o pente desliza para fora do cabo."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.45))
+    colar(som, clique(rng, 2800, 0.012, ruido=0.6), 0.0, 0.9)
+    t = tempo(0.22)
+    desliza = passa_baixa(passa_alta(rng.standard_normal(t.size), 900), 4000) * np.sin(np.pi * t / t[-1]) * 0.35
+    colar(som, desliza, 0.03)
+    return som
+
+
+def trava(semente):
+    """A trava do ferrolho subindo: um estalo seco e grave."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.2))
+    colar(som, clique(rng, 1500, 0.02, ruido=0.7, dur=0.12), 0.0, 1.0)
+    return som
+
+
 def _codificar(caminho, sinal):
     sai = av.open(str(caminho), "w", format="ogg")
     fluxo = sai.add_stream("libvorbis", rate=TAXA, layout="mono")
@@ -205,6 +247,12 @@ def principal():
         "estojo_cai": (sintetizado(estojo_cai, 2.0), 3, "Estojo cai"),
         "bala_entra": (bala_baixada, 1, "Bala entra no tambor"),
         "tambor_gira": (sintetizado(tambor_gira, 2.5), 1, "Tambor gira"),
+        # Desert Eagle (16/10/2026)
+        "tiro_deagle": (tiro_deagle, 1, "Desert Eagle dispara"),
+        "ferrolho": (ferrolho_baixado, 1, "Ferrolho fecha"),
+        "trava": (sintetizado(trava, 2.5), 1, "Ferrolho trava aberto"),
+        "pente_sai": (sintetizado(pente_sai, 2.5), 1, "Pente sai"),
+        "pente_entra": (pente_entra_baixado, 1, "Pente entra"),
     }
     faltando = [n for n in ("tiro.mp3", "uzi-reload.mp3") if not (BAIXADOS / n).exists()]
     if faltando:

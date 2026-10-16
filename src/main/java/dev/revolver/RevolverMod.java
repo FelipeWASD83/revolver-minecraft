@@ -23,6 +23,8 @@ public final class RevolverMod {
         if (evento.getTabKey() == CreativeModeTabs.COMBAT) {
             evento.accept(Registros.REVOLVER.get());
             for (var cartucho : Registros.CARTUCHOS.values()) evento.accept(cartucho.get());
+            evento.accept(Registros.DEAGLE.get());
+            for (var cartucho : Registros.CARTUCHOS_50.values()) evento.accept(cartucho.get());
         }
     }
 

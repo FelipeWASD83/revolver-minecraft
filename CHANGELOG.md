@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 (16/10/2026)
+
+### Novo
+- Desert Eagle .50 AE, com o modelo e as animações do projeto deagle-3d. É semiautomática, leva 7 no pente
+  e 1 na câmara, e o ferrolho fica aberto no último tiro. Troca o pente com a tecla R, e o pente velho cai.
+- Quatro cartuchos .50 AE com 1,5 vez o dano dos .45: comum 30, aço 75, diamante 150 e netherite 300.
+- Sons da deagle: o tiro mais grave e o pente saindo, entrando, a trava e o ferrolho.
+
+### Mudou
+- O mod se chama "Revólver e Desert Eagle", e a tecla R recarrega qualquer uma das duas armas.
+- O revólver não aceita mais cartucho de outro calibre na recarga.
+
 ## 1.1.0 (16/10/2026)
 
 ### Novo

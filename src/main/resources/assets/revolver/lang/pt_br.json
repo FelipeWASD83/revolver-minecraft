@@ -2,8 +2,8 @@
   "item.revolver.revolver": "Revólver",
   "item.revolver.revolver.balas": "Balas: %s de 6",
   "item.revolver.cartucho_45": "Cartucho .45",
-  "key.categories.revolver": "Revólver",
-  "key.revolver.recarregar": "Recarregar o revólver",
+  "key.categories.revolver": "Armas",
+  "key.revolver.recarregar": "Recarregar a arma",
   "subtitles.revolver.tiro": "Revólver dispara",
   "subtitles.revolver.engatilhar": "Cão armado",
   "subtitles.revolver.clique_seco": "Revólver dá clique seco",
@@ -15,5 +15,16 @@
   "item.revolver.cartucho_45_diamante": "Cartucho .45 de diamante",
   "item.revolver.cartucho_45_netherite": "Cartucho .45 de netherite",
   "item.revolver.cartucho.dano": "Dano: %s",
-  "item.revolver.revolver.tipo": "%s × %s (dano %s)"
+  "item.revolver.revolver.tipo": "%s × %s (dano %s)",
+  "item.revolver.deagle": "Desert Eagle",
+  "item.revolver.deagle.balas": "Balas: %s no pente e %s na câmara",
+  "item.revolver.cartucho_50": "Cartucho .50 AE",
+  "item.revolver.cartucho_50_aco": "Cartucho .50 AE de aço",
+  "item.revolver.cartucho_50_diamante": "Cartucho .50 AE de diamante",
+  "item.revolver.cartucho_50_netherite": "Cartucho .50 AE de netherite",
+  "subtitles.revolver.tiro_deagle": "Desert Eagle dispara",
+  "subtitles.revolver.ferrolho": "Ferrolho fecha",
+  "subtitles.revolver.trava": "Ferrolho trava aberto",
+  "subtitles.revolver.pente_sai": "Pente sai",
+  "subtitles.revolver.pente_entra": "Pente entra"
 }

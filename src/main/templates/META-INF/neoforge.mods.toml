@@ -8,8 +8,8 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="Felipe"
 description='''
-Um revólver de ação simples (estilo Colt, cabo de nogueira) que atira e recarrega pela portinhola,
-com as animações feitas no Blender. Recarregar: tecla R.
+Um revólver de ação simples (estilo Colt, cabo de nogueira) que recarrega pela portinhola e uma
+Desert Eagle .50 AE que troca o pente, com as animações feitas no Blender. Recarregar: tecla R.
 '''
 
 [[dependencies.${mod_id}]]

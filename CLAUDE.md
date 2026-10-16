@@ -1,7 +1,8 @@
 # CLAUDE.md: revolver-minecraft
 
-Mod de Minecraft (NeoForge 1.21.1) com o revólver do projeto `revolver-3d`: atira, recarrega pela
-portinhola e mostra as mesmas animações feitas no Blender. Criado em 16/10/2026 a pedido do Felipe
+Mod de Minecraft (NeoForge 1.21.1) com o revólver do projeto `revolver-3d` e, desde a 1.2.0, a Desert Eagle do
+`deagle-3d`. As duas atiram, recarregam e mostram as mesmas animações feitas no Blender. O revólver recarrega pela
+portinhola, e a deagle troca o pente. Criado em 16/10/2026 a pedido do Felipe
 ("faz um mod do minecraft com esse revolver"), com plano aprovado; repositório público (escolha dele).
 Extras aprovados por ele: sons, receitas e partículas (o coice na câmera ele não quis). O `CLAUDE.md` da
 raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que decidiu a abordagem está em
@@ -10,20 +11,26 @@ raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que dec
 ## Como gerar, compilar e conferir
 
 ```powershell
-# 1. modelo e animações (lê ..\revolver-3d\modelo\revolver.blend; não mexe nele)
+# 1. modelo e animações (lê o .blend de cada projeto; não mexe nele)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\revolver-3d\modelo\revolver.blend --python ferramentas\exportar_modelo.py
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\deagle-3d\modelo\deagle.blend --python ferramentas\exportar_deagle.py
 # 2. sons (precisa do .venv: python -m venv .venv; .venv\Scripts\python.exe -m pip install av==17.0.1 numpy==2.5.2)
 .venv\Scripts\python.exe ferramentas\gerar_sons.py
 # 3. compilar e testar (o jar sai em build\libs)
 .\gradlew.bat build
 # 4. prévia da mão e do inventário, sem abrir o jogo (ferramentas\saida\previa-*.png)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python ferramentas\previa_mao.py
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python ferramentas\previa_mao.py -- deagle
 ```
 
 O exportador termina com uma conferência (peça exportada + matriz do quadro contra o Blender; tem que dar
-erro perto de 1e-6 bloco) e grava `ferramentas/exportacao.txt`. Os testes (`.\gradlew.bat test`, 19)
-conferem a lógica do tambor, que os quadros do Java batem com os do arquivo exportado, e que todo modelo,
-textura, som, tradução e receita existe e se lê.
+erro perto de 1e-6 bloco) e grava `ferramentas/exportacao.txt` (`exportacao-deagle.txt` na deagle). Os dois
+exportadores dividem o `ferramentas/comum.py` (espaço do item, escrita do OBJ, exibição na mão, ícones); a saída do
+revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew.bat test`, 35) conferem:
+
+- a lógica do tambor e a do pente;
+- que os quadros do Java batem com os dos arquivos exportados;
+- que todo modelo, textura, som, tradução e receita das duas armas existe e se lê.
 
 **Instância de teste no Prism** (criada em 16/10/2026 a pedido dele): `%APPDATA%\PrismLauncher\instances\Revolver`, nome "Revólver (teste do mod)", só com este mod, base copiada da "Horizonte Infinito"
 (Minecraft 1.21.1, NeoForge 21.1.251, Java do Prism, 2 a 6 GB) e o `options.txt` dele. Recompilou: copiar o
@@ -84,8 +91,71 @@ quando ele pedir.
   como Latin-1 e o "ó" direto sai duplicado no jar.
 - **Fora da regra de atualização dentro do app**: mod é carregado pelo launcher, não é app.
 
+## Desert Eagle (1.2.0, 16/10/2026)
+
+Pedido dele: "faz uma deagle, ela vai dar 1,5x mais dano que o revolver, faz que nem fizemos o revolver". Plano
+aprovado com munição .50 AE própria. O modelo é o do `deagle-3d`.
+
+- **Mesmo caminho do revólver:**
+  - `ferramentas/exportar_deagle.py` escreve `models/item/deagle/`, `textures/item/deagle/` e
+    `animacoes/deagle.json`;
+  - `DeagleRenderer` desenha as peças;
+  - `DeagleItem` faz a lógica, e o tiro é o `Disparo.atirar` comum às duas armas.
+- **Calibre e dano:**
+  - `logica/Calibre` tem C45 (multiplicador 1) e C50 (1,5);
+  - os tipos de bala continuam no `TipoBala` (a ordem não muda) e valem para os dois calibres;
+  - o dano é `tipo.dano(calibre)`: .50 dá 30, 75, 150 e 300;
+  - os cartuchos são `cartucho_50` e `cartucho_50_<tipo>`, e `CartuchoItem` guarda o calibre;
+  - **cada arma só aceita o próprio calibre**, e o revólver passou a filtrar.
+- **Pente** (`logica/Pente`, sem Minecraft, testado):
+  - 7 no pente e 1 na câmara, com o tipo de cada bala em 2 bits e a de cima no lugar 0;
+  - o tiro gasta a da câmara e sobe a de cima do pente; sem bala no pente, câmara vazia e **ferrolho aberto**;
+  - a recarga mantém as que sobraram no pente velho (saem primeiro) e completa com cartuchos, na ordem do arco;
+  - aberta, no fim da recarga a de cima vai para a câmara.
+- **Estado** (`EstadoDeagle`, componente `estado_deagle`): pente, tipos, câmara, tipo da câmara, ação, início e o
+  pente novo da recarga. As ações são:
+
+  | Ação | Quando acontece | Animação |
+  |---|---|---|
+  | TIRO | atira com bala no pente | `tiro` |
+  | TIRO_ULTIMO | atira a última bala, sem nenhuma no pente | `tiro_ultimo` |
+  | SECO | aperta o gatilho aberta | `seco` |
+  | RECARGA | troca o pente com bala na câmara | `recarregar` |
+  | RECARGA_VAZIA | troca o pente aberta | `recarregar_vazia` |
+
+  **Parada e aberta, o renderizador usa o quadro 0 da `recarregar_vazia`**, onde o ferrolho está atrás e a trava
+  erguida.
+- **Tempos** (`logica/TemposDeagle`, mesmo `Tempos.tick` do revólver):
+  - o tiro sai no quadro 4 (tick 2) e a animação inteira tem 14 quadros (~2 tiros por segundo);
+  - a troca de pente leva 76 quadros, ou 86 aberta;
+  - no quadro 34 (`REC_TROCA`) o renderizador passa a mostrar a bala de cima do pente novo.
+
+  Os eventos estão também no `EVENTOS` do exportador, e o teste confere que batem.
+- **Peças do jogo:**
+  - `ferrolho`, `cao`, `gatilho`, `trava`, `botao`, `pente` e `clarao`;
+  - `estojo`: a mesma malha para o que voa no tiro (pista `ejetado`) e para o de cima do pente (pista
+    `topo_estojo`);
+  - `bala_<tipo>`, na pista `topo_bala`.
+- **Cores no jogo:**
+  - inox 0,80;
+  - aço escuro 0,27, porque preto vira borrão;
+  - borracha com textura própria 32x32 gerada pelo exportador, mais clara que a do Blender.
+
+  A deagle tem ~27 cm, então fica um pouco maior que o revólver na mesma escala (250 mm = 1 bloco). As escalas de
+  exibição são um pouco menores: primeira pessoa 0,78 e inventário 0,80.
+- **Sons novos:**
+  - `tiro_deagle`: o `tiro.mp3` 18% mais grave;
+  - `pente_entra` e `ferrolho`: o segundo e o terceiro som do `uzi-reload.mp3`, que até então não eram usados;
+  - `pente_sai` e `trava`: sintetizados.
+
+  O gerador recodifica todos os OGG e o Vorbis muda os bytes a cada vez. Se os sons do revólver não mudaram,
+  devolver os OGG dele ao commit (`git checkout`) em vez de commitar o ruído.
+- **Tecla R e nome do mod:** a tecla R recarrega a arma que estiver na mão (`RecarregarMsg` decide pelo item). O
+  nome do mod passou para "Revólver e Desert Eagle", e a categoria de teclas para "Armas".
+
 ## O que ainda não foi visto
 
-Nada disso foi testado dentro do Minecraft: tamanho e ângulo na mão, a luz do jogo nas peças, os sons, o
-tiro acertando, a recarga e o desempenho com o modelo de ~46 mil triângulos (corpo de 27 mil). Shaders
-(Iris/Oculus) não testados.
+O revólver ele testou no jogo (as correções da 1.0.1 vieram do que ele viu). **A Desert Eagle não foi aberta no
+Minecraft**: tamanho e ângulo na mão (só a prévia), a luz nas peças, os sons, o tiro, a troca de pente e o
+ferrolho aberto. A terceira pessoa das duas armas foi conferida só na conta. Shaders (Iris/Oculus) não
+testados.

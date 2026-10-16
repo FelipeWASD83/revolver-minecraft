@@ -42,5 +42,35 @@
     "sounds": [
       "revolver:tambor_gira"
     ]
+  },
+  "tiro_deagle": {
+    "subtitle": "subtitles.revolver.tiro_deagle",
+    "sounds": [
+      "revolver:tiro_deagle"
+    ]
+  },
+  "ferrolho": {
+    "subtitle": "subtitles.revolver.ferrolho",
+    "sounds": [
+      "revolver:ferrolho"
+    ]
+  },
+  "trava": {
+    "subtitle": "subtitles.revolver.trava",
+    "sounds": [
+      "revolver:trava"
+    ]
+  },
+  "pente_sai": {
+    "subtitle": "subtitles.revolver.pente_sai",
+    "sounds": [
+      "revolver:pente_sai"
+    ]
+  },
+  "pente_entra": {
+    "subtitle": "subtitles.revolver.pente_entra",
+    "sounds": [
+      "revolver:pente_entra"
+    ]
   }
 }

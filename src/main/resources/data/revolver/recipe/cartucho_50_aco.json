@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "CCC",
+    "CMC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "revolver:cartucho_50"
+    },
+    "M": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "revolver:cartucho_50_aco",
+    "count": 8
+  }
+}

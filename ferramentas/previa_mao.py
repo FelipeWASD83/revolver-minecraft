@@ -1,18 +1,20 @@
-"""Prévia de como o revólver aparece na mão, sem abrir o jogo.
+"""Prévia de como o revólver (ou a deagle) aparece na mão, sem abrir o jogo.
 
-Roda no Blender:
+Roda no Blender (depois de `--`, `deagle` faz a da deagle):
 
     "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe" -b --factory-startup --python ferramentas\\previa_mao.py
+    "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe" -b --factory-startup --python ferramentas\\previa_mao.py -- deagle
 
 Monta as peças exportadas (os OBJ do mod) com a mesma conta que o Minecraft 1.21.1 faz para um item na mão
 direita em primeira pessoa (ItemInHandRenderer.applyItemArmTransform + a exibição do JSON do item + o
 deslocamento de meio bloco) e renderiza do olho do jogador, com campo de visão de 70° e a mira no centro.
-Também faz o inventário (vista "gui"). Sai em ferramentas/saida/previa-*.png. Serve para conferir posição e
+Também faz o inventário (vista "gui"). Sai em ferramentas/saida/previa-*.png (previa-deagle-*.png). Serve para conferir posição e
 ângulo; luz e cor não são as do jogo.
 """
 
 import json
 import math
+import sys
 from pathlib import Path
 
 import bpy
@@ -21,13 +23,17 @@ from mathutils import Matrix, Vector
 PASTA = Path(__file__).resolve().parent.parent
 MODELOS = PASTA / "src" / "main" / "resources" / "assets" / "revolver" / "models" / "item"
 SAIDA = PASTA / "ferramentas" / "saida"
-CORES = {"madeira": (0.45, 0.22, 0.1), "tempera": (0.55, 0.55, 0.57)}
+CORES = {"madeira": (0.45, 0.22, 0.1), "tempera": (0.55, 0.55, 0.57), "borracha": (0.25, 0.25, 0.26)}
+ARMA = "deagle" if "deagle" in (sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []) else "revolver"
+PECAS = {"revolver": ("corpo", "cao", "gatilho", "tambor", "portinhola", "botao"),
+         "deagle": ("corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente")}[ARMA]
+PREFIXO = "previa-" if ARMA == "revolver" else "previa-deagle-"
 
 
 def ler_obj(nome):
     """OBJ cru (sem converter eixos): vértices, faces e a cor de cada material."""
     cores = {}
-    mtl = (MODELOS / "revolver" / f"{nome}.mtl").read_text(encoding="utf-8").splitlines()
+    mtl = (MODELOS / ARMA / f"{nome}.mtl").read_text(encoding="utf-8").splitlines()
     atual = None
     for linha in mtl:
         p = linha.split()
@@ -41,7 +47,7 @@ def ler_obj(nome):
             cores[atual] = CORES[p[1][1:]]
     vs, faces, mats = [], [], []
     mat = None
-    for linha in (MODELOS / "revolver" / f"{nome}.obj").read_text(encoding="utf-8").splitlines():
+    for linha in (MODELOS / ARMA / f"{nome}.obj").read_text(encoding="utf-8").splitlines():
         if linha.startswith("v "):
             vs.append(tuple(float(c) for c in linha.split()[1:4]))
         elif linha.startswith("usemtl"):
@@ -69,7 +75,7 @@ def objeto(nome, M):
 
 
 def exibicao(contexto):
-    d = json.loads((MODELOS / "revolver.json").read_text(encoding="utf-8"))["display"][contexto]
+    d = json.loads((MODELOS / f"{ARMA}.json").read_text(encoding="utf-8"))["display"][contexto]
     t = Vector(d["translation"]) / 16
     rx, ry, rz = (math.radians(a) for a in d["rotation"])
     R = (Matrix.Rotation(rx, 4, 'X') @ Matrix.Rotation(ry, 4, 'Y') @ Matrix.Rotation(rz, 4, 'Z'))
@@ -81,7 +87,7 @@ def montar(M):
     for o in list(bpy.data.objects):
         if o.type == 'MESH':
             bpy.data.objects.remove(o)
-    for peca in ("corpo", "cao", "gatilho", "tambor", "portinhola", "botao"):
+    for peca in PECAS:
         objeto(peca, M)
 
 
@@ -106,7 +112,7 @@ def principal():
     # para o Blender com a câmera na origem sem giro, que também olha para -Z com Y para cima
     braco = Matrix.Translation((0.56, -0.52, -0.72))
     montar(braco @ exibicao("firstperson_righthand"))
-    cena.render.filepath = str(SAIDA / "previa-primeira-pessoa.png")
+    cena.render.filepath = str(SAIDA / f"{PREFIXO}primeira-pessoa.png")
     bpy.ops.render.render(write_still=True)
 
     # inventário: o item visto de frente, num quadrado de um bloco
@@ -115,7 +121,7 @@ def principal():
     cam.data.type = 'ORTHO'
     cam.data.ortho_scale = 1.0
     cena.render.resolution_x = cena.render.resolution_y = 512
-    cena.render.filepath = str(SAIDA / "previa-inventario.png")
+    cena.render.filepath = str(SAIDA / f"{PREFIXO}inventario.png")
     bpy.ops.render.render(write_still=True)
 
 

@@ -1,0 +1,23 @@
+EXPORTAÇÃO DA DEAGLE PARA O MOD
+
+corpo            17436 triângulos  (armacao, cano, capuz, empunhadura, guarda_mato, massa_mira, parafuso_placa, pino_cao, pino_gatilho)
+ferrolho          9582 triângulos  (ferrolho)
+cao               1724 triângulos  (cao)
+gatilho           1312 triângulos  (gatilho)
+trava             2230 triângulos  (trava_ferrolho)
+botao              192 triângulos  (botao_pente)
+pente             5056 triângulos  (pente)
+clarao              90 triângulos  (clarao)
+estojo             736 triângulos  (estojo_ejetado)
+bala_comum         400 triângulos  (bala_topo)
+bala_aco           400 triângulos  (bala_topo)
+bala_diamante      400 triângulos  (bala_topo)
+bala_netherite     400 triângulos  (bala_topo)
+
+tiro: 14 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala
+tiro_ultimo: 14 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala
+seco: 10 quadros, peças que mexem: ferrolho, cao, gatilho, trava
+recarregar: 76 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala
+recarregar_vazia: 86 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala
+conferência (peça exportada + matriz do quadro contra o Blender): maior erro 0.0000011 bloco
+exibição: {"firstperson_righthand": {"rotation": [0, 90, 0], "translation": [-0.8, 0.083, -3.068], "scale": [0.78, 0.78, 0.78]}, "thirdperson_righthand": {"rotation": [90, 90, 0], "translation": [0.0, 3.078, 0.127], "scale": [0.38, 0.38, 0.38]}, "gui": {"rotation": [0, 0, 0], "translation": [0.0, 0.0, 0.0], "scale": [0.8, 0.8, 0.8]}, "ground": {"rotation": [0, 0, 0], "translation": [0.0, 1.92, 0.0], "scale": [0.36, 0.36, 0.36]}, "fixed": {"rotation": [0, 180, 0], "translation": [0.0, 0.0, 0.0], "scale": [0.75, 0.75, 0.75]}}
