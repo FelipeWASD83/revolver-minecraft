@@ -8,7 +8,7 @@ Roda no Blender (depois de `--`, o id da arma: `deagle`, `ak47`...; sem nada, o 
 Monta as peças exportadas (os OBJ do mod) com a mesma conta que o Minecraft 1.21.1 faz para um item na mão
 direita em primeira pessoa (ItemInHandRenderer.applyItemArmTransform + a exibição do JSON do item + o
 deslocamento de meio bloco) e renderiza do olho do jogador, com campo de visão de 70° e a mira no centro.
-Também faz o inventário (vista "gui"). Sai em ferramentas/saida/previa-*.png (previa-deagle-*.png). Serve para conferir posição e
+O inventário é o ícone em pixel art, com prévia própria no gerar_icones.py. Sai em ferramentas/saida/previa-*.png (previa-deagle-*.png). Serve para conferir posição e
 ângulo; luz e cor não são as do jogo.
 """
 
@@ -121,14 +121,6 @@ def principal():
     cena.render.filepath = str(SAIDA / f"{PREFIXO}primeira-pessoa.png")
     bpy.ops.render.render(write_still=True)
 
-    # inventário: o item visto de frente, num quadrado de um bloco
-    montar(exibicao("gui"))
-    cam.location = (0, 0, 3)
-    cam.data.type = 'ORTHO'
-    cam.data.ortho_scale = 1.0
-    cena.render.resolution_x = cena.render.resolution_y = 512
-    cena.render.filepath = str(SAIDA / f"{PREFIXO}inventario.png")
-    bpy.ops.render.render(write_still=True)
-
+    # o inventário mostra o ícone em pixel art (ferramentas/gerar_icones.py, que grava a sua própria prévia)
 
 principal()

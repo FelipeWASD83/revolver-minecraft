@@ -21,6 +21,8 @@ raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que dec
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\deagle-3d\modelo\deagle.blend --python ferramentas\exportar_deagle.py
 # as armas novas: o .blend do projeto e o id (ak47, m4a4, m4a1, metralhadora, escopeta, sniper)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\ak47-3d\modelo\ak47.blend --python ferramentas\exportar_arma.py -- ak47
+# os ícones em pixel art do inventário (depois dos exportadores; textures/item/icone e models/item/icone)
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python ferramentas\gerar_icones.py
 # a imagem da luneta da sniper (textures/gui/luneta.png)
 .venv\Scripts\python.exe ferramentas\gerar_luneta.py
 # 2. sons (precisa do .venv: python -m venv .venv; .venv\Scripts\python.exe -m pip install av==17.0.1 numpy==2.5.2)
@@ -36,7 +38,7 @@ raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que dec
 O exportador termina com uma conferência (peça exportada + matriz do quadro contra o Blender; tem que dar
 erro perto de 1e-6 bloco) e grava `ferramentas/exportacao.txt` (`exportacao-deagle.txt` na deagle). Os dois
 exportadores dividem o `ferramentas/comum.py` (espaço do item, escrita do OBJ, exibição na mão, ícones); a saída do
-revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew.bat test`, 39) conferem:
+revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew.bat test`, 40) conferem:
 
 - a lógica do tambor e a do pente;
 - que os quadros do Java batem com os dos arquivos exportados;
@@ -99,6 +101,16 @@ quando ele pedir.
   pontilhados, quase invisíveis (print dele). Há teste.
 - **O nome do mod vai como escape Unicode no `gradle.properties`** (`Rev\u00f3lver`): o arquivo é lido
   como Latin-1 e o "ó" direto sai duplicado no jar.
+- **No inventário, ícone em pixel art; na mão, o 3D** (2.1.0, pedido dele: "na barra de itens o jogo fica
+  renderizando os modelos, isso tá muito pesado"):
+  - os três renderizadores, no contexto `GUI`, desenham só o modelo `item/icone/<arma>` (item/generated com a
+    textura 32 x 32) e voltam;
+  - por isso o `display.gui` de todos os itens é neutro (escala 1, sem giro nem deslocamento), e os três
+    exportadores escrevem assim;
+  - os ícones saem do `ferramentas/gerar_icones.py`: as peças exportadas fotografadas de lado em ortográfica com
+    as cores do jogo, média por bloco até 32 x 32 (alfa > 0,3 para o cano fino não sumir), mais contraste e cor,
+    chanfro (borda de cima clara, de baixo escura), 15 tons por canal e contorno escuro;
+  - há teste (ícone, textura e gui neutro).
 - **Fora da regra de atualização dentro do app**: mod é carregado pelo launcher, não é app.
 
 ## Desert Eagle (1.2.0, 16/10/2026)

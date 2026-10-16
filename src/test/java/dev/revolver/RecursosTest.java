@@ -92,6 +92,24 @@ class RecursosTest {
     }
 
     @Test
+    void cadaArmaTemIconeEOInventarioNeutro() throws IOException {
+        // no inventário vai o ícone em pixel art (o renderizador desenha ele no cubo de 0 a 1), então o display.gui do
+        // item tem que ser neutro: sem giro, sem deslocamento, escala 1
+        for (String arma : List.of("revolver", "deagle", "ak47", "m4a4", "m4a1", "metralhadora", "escopeta", "sniper")) {
+            JsonObject icone = json(ASSETS.resolve("models/item/icone/" + arma + ".json"));
+            assertEquals("minecraft:item/generated", icone.get("parent").getAsString());
+            assertEquals("revolver:item/icone/" + arma, icone.getAsJsonObject("textures").get("layer0").getAsString());
+            assertTrue(Files.exists(ASSETS.resolve("textures/item/icone/" + arma + ".png")), arma);
+            JsonObject gui = json(ASSETS.resolve("models/item/" + arma + ".json")).getAsJsonObject("display")
+                    .getAsJsonObject("gui");
+            for (String campo : List.of("rotation", "translation")) {
+                for (JsonElement v : gui.getAsJsonArray(campo)) assertEquals(0.0, v.getAsDouble(), 1e-9, arma);
+            }
+            for (JsonElement v : gui.getAsJsonArray("scale")) assertEquals(1.0, v.getAsDouble(), 1e-9, arma);
+        }
+    }
+
+    @Test
     void cadaSomTemArquivo() throws IOException {
         JsonObject sons = json(ASSETS.resolve("sounds.json"));
         for (String evento : List.of("tiro", "engatilhar", "clique_seco", "portinhola", "estojo_cai", "bala_entra",

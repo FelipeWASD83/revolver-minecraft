@@ -44,6 +44,10 @@ public class DeagleRenderer extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext contexto, PoseStack pose, MultiBufferSource buffers,
                              int luz, int sobreposicao) {
+        if (contexto == ItemDisplayContext.GUI) {      // no inventário, o ícone em pixel art
+            RevolverCliente.desenharIcone("deagle", stack, pose, buffers, luz, sobreposicao);
+            return;
+        }
         Animacao anim = RevolverCliente.animacaoDeagle();
         if (anim == null) return;
         Minecraft mc = Minecraft.getInstance();

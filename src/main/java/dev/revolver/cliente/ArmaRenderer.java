@@ -36,6 +36,10 @@ public class ArmaRenderer extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext contexto, PoseStack pose, MultiBufferSource buffers,
                              int luz, int sobreposicao) {
+        if (contexto == ItemDisplayContext.GUI) {      // no inventário, o ícone em pixel art
+            RevolverCliente.desenharIcone(arma.id, stack, pose, buffers, luz, sobreposicao);
+            return;
+        }
         Animacao anim = RevolverCliente.animacaoArma(arma);
         if (anim == null) return;
         Minecraft mc = Minecraft.getInstance();

@@ -68,7 +68,7 @@ TIPOS = [
 EXIBICAO = {
     "firstperson_righthand": {"giro": (0, 90, 0), "escala": 0.78, "palma": (-0.05, 0.03, 0.08)},
     "thirdperson_righthand": {"giro": (90, 90, 0), "escala": 0.38, "palma": (0.0, 0.06, 0.02)},
-    "gui": {"giro": (0, 0, 0), "escala": 0.80, "centro": True},
+    "gui": {"giro": (0, 0, 0), "escala": 1.0, "centro": True},     # neutro: no inventário vai o ícone 2D
     "ground": {"giro": (0, 0, 0), "escala": 0.36, "centro": True, "desloc": (0, 0.12, 0)},
     "fixed": {"giro": (0, 180, 0), "escala": 0.75, "centro": True},
 }

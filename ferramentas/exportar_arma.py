@@ -143,7 +143,7 @@ def principal():
     Ainv = A.inverted()
     comprimento = (maximo - minimo).x * comum.ESCALA
     tabela = tabela_materiais()
-    texturas_json = {nome: f"revolver:item/{ID}/{nome}" for nome, _ in set(tabela.values())}
+    texturas_json = {nome: f"revolver:item/{ID}/{nome}" for nome in sorted({t for t, _ in tabela.values()})}
     texturas_json["branco"] = f"revolver:item/{ID}/branco"
     texturas_json["particle"] = f"revolver:item/{ID}/branco"
 
@@ -230,7 +230,7 @@ def principal():
     exibicao = {
         "firstperson_righthand": {"giro": (0, 90, 0), "escala": escala_mao, "palma": (-0.05, 0.03, 0.08)},
         "thirdperson_righthand": {"giro": (90, 90, 0), "escala": 0.32, "palma": (0.0, 0.06, 0.02)},
-        "gui": {"giro": (0, 0, 0), "escala": round(0.95 / comprimento, 3), "centro": True},
+        "gui": {"giro": (0, 0, 0), "escala": 1.0, "centro": True},      # neutro: no inventário vai o ícone 2D
         "ground": {"giro": (0, 0, 0), "escala": 0.25, "centro": True, "desloc": (0, 0.12, 0)},
         "fixed": {"giro": (0, 180, 0), "escala": round(0.9 / comprimento, 3), "centro": True},
     }

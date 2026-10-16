@@ -10,7 +10,11 @@ import dev.revolver.logica.Animacao;
 import dev.revolver.logica.Arma;
 import dev.revolver.logica.TipoBala;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -96,6 +100,23 @@ public final class RevolverCliente {
         return pecas;
     }
 
+    /** As armas que têm ícone em pixel art (textures/item/icone, do ferramentas/gerar_icones.py). */
+    static final List<String> ICONES = List.of("revolver", "deagle", "ak47", "m4a4", "m4a1", "metralhadora",
+            "escopeta", "sniper");
+
+    /**
+     * No inventário e na barra de itens a arma é o ícone em pixel art, não o modelo 3D: oito modelos animados
+     * desenhados a cada quadro na barra pesavam (pedido dele). O {@code display.gui} do item é neutro (escala 1, sem
+     * giro), então aqui a pose já é o cubo de 0 a 1 em que o ícone gerado cabe.
+     */
+    public static void desenharIcone(String arma, ItemStack stack, PoseStack pose, MultiBufferSource buffers, int luz,
+                                     int sobreposicao) {
+        Minecraft mc = Minecraft.getInstance();
+        BakedModel modelo = mc.getModelManager().getModel(modelo("icone", arma));
+        mc.getItemRenderer().renderModelLists(modelo, stack, luz, sobreposicao, pose,
+                buffers.getBuffer(Sheets.cutoutBlockSheet()));
+    }
+
     public static ModelResourceLocation modelo(String peca) {
         return modelo("revolver", peca);
     }
@@ -115,6 +136,7 @@ public final class RevolverCliente {
         for (Arma arma : Arma.values()) {
             for (String p : pecasDoModelo(arma)) evento.register(modelo(arma.id, p));
         }
+        for (String arma : ICONES) evento.register(modelo("icone", arma));
     }
 
     private static void extensoes(RegisterClientExtensionsEvent evento) {

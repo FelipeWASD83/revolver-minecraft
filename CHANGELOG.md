@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 (16/10/2026)
+
+### Mudou
+- Na barra de itens e no inventário as armas aparecem como ícones em pixel art (32 x 32, tirados do próprio
+  modelo), em vez do modelo 3D animado, que pesava com várias armas na barra. Na mão e no chão continua o 3D.
+
 ## 2.0.1 (16/10/2026)
 
 ### Corrigido

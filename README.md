@@ -119,7 +119,7 @@ Já existe uma instância só com este mod no Prism, a **"Revólver (teste do mo
 NeoForge 21.1.251, a mesma base da "Horizonte Infinito", com as suas opções de vídeo e controles). É só
 abrir o Prism e jogar nela.
 
-Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-2.0.1.jar`) para a
+Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-2.1.0.jar`) para a
 pasta `mods` dela. Para gerar o jar: `.\gradlew.bat build` nesta pasta. Depois de gerar de novo, copie o
 jar de novo para a instância (o arquivo lá não se atualiza sozinho).
 
@@ -146,6 +146,10 @@ jar de novo para a instância (o arquivo lá não se atualiza sozinho).
   Para trocar, ponha outro arquivo lá com o mesmo nome e rode
   `.venv\Scripts\python.exe ferramentas\gerar_sons.py`. Esses arquivos ficam fora do GitHub; os sons
   prontos (os OGG do mod) vão junto no repositório.
+- **Ícones do inventário:** são pixel art de 32 x 32 tirados do próprio modelo (de lado, com poucos tons e o
+  contorno escuro). Mudou o modelo, rode `blender -b --factory-startup --python ferramentas\gerar_icones.py`
+  (depois do exportador); a barra de itens de mentira fica em `ferramentas\saida\icones-barra.png`. Para desenhar
+  um à mão, é só trocar o PNG em `src\main\resources\assets\revolver\textures\item\icone\`.
 - **Arma mudou no projeto dela (`revolver-3d`, `deagle-3d`, `ak47-3d`...):** rode o exportador dela de novo e o
   mod pega o modelo e a animação novos (comandos no `CLAUDE.md`).
 
