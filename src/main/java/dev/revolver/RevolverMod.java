@@ -1,12 +1,16 @@
 package dev.revolver;
 
 import dev.revolver.cliente.RevolverCliente;
+import dev.revolver.logica.Calibre;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 @Mod(RevolverMod.ID)
 public final class RevolverMod {
@@ -25,8 +29,12 @@ public final class RevolverMod {
             for (var cartucho : Registros.CARTUCHOS.values()) evento.accept(cartucho.get());
             evento.accept(Registros.DEAGLE.get());
             for (var cartucho : Registros.CARTUCHOS_50.values()) evento.accept(cartucho.get());
+            // cada arma seguida dos cartuchos dela; calibre dividido (o 5,56 das duas M4) entra uma vez só, senão o
+            // jogo fecha ao abrir o inventário do criativo ("already exists in the tab's list")
+            Set<Calibre> postos = EnumSet.noneOf(Calibre.class);
             for (var arma : Registros.ARMAS.entrySet()) {
                 evento.accept(arma.getValue().get());
+                if (!postos.add(arma.getKey().calibre)) continue;
                 for (var cartucho : Registros.CARTUCHOS_DAS_ARMAS.get(arma.getKey().calibre).values()) {
                     evento.accept(cartucho.get());
                 }

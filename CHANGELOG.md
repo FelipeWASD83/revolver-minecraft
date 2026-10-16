@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 (16/10/2026)
+
+### Corrigido
+- O jogo fechava ao abrir o inventário do criativo: os cartuchos 5,56, que a M4A4 e a M4A1-S dividem, entravam
+  duas vezes na aba Combate.
+
 ## 2.0.0 (16/10/2026)
 
 ### Novo
