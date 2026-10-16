@@ -25,6 +25,11 @@ erro perto de 1e-6 bloco) e grava `ferramentas/exportacao.txt`. Os testes (`.\gr
 conferem a lógica do tambor, que os quadros do Java batem com os do arquivo exportado, e que todo modelo,
 textura, som, tradução e receita existe e se lê.
 
+**Instância de teste no Prism** (criada em 16/10/2026 a pedido dele): `%APPDATA%\PrismLauncher\instances\Revolver`, nome "Revólver (teste do mod)", só com este mod, base copiada da "Horizonte Infinito"
+(Minecraft 1.21.1, NeoForge 21.1.251, Java do Prism, 2 a 6 GB) e o `options.txt` dele. Recompilou: copiar o
+jar de `build\libs` para `minecraft\mods` de lá (e apagar o antigo se a versão mudar de nome). Nunca
+mexer na "Horizonte Infinito" nem na "fancy craft".
+
 **Não abrir o jogo por conta própria** (`runClient` abre uma janela do Minecraft na tela dele; a regra
 vem do `feitio`, e ele joga no mesmo PC). Conferir pela prévia, pelos testes e pelo exportador; abrir só
 quando ele pedir.
