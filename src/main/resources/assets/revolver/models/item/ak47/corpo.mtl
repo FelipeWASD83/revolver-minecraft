@@ -1,0 +1,24 @@
+newmtl aco_escuro
+Kd 0.4277 0.4277 0.4430 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco
+Kd 0.5141 0.5270 0.5141 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl madeira
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #madeira
+
+newmtl madeira_punho
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #madeira_punho

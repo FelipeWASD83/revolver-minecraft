@@ -1,8 +1,13 @@
 # CLAUDE.md: revolver-minecraft
 
-Mod de Minecraft (NeoForge 1.21.1) com o revólver do projeto `revolver-3d` e, desde a 1.2.0, a Desert Eagle do
-`deagle-3d`. As duas atiram, recarregam e mostram as mesmas animações feitas no Blender. O revólver recarrega pela
-portinhola, e a deagle troca o pente. Criado em 16/10/2026 a pedido do Felipe
+Mod de Minecraft (NeoForge 1.21.1), "Arsenal" desde a 2.0.0, com oito armas, cada uma modelada e animada no
+Blender num projeto próprio:
+
+- o revólver do `revolver-3d`;
+- a Desert Eagle do `deagle-3d` (1.2.0);
+- desde a 2.0.0, AK-47, M4A4, M4A1-S, metralhadora, escopeta 12 e sniper, dos projetos `<id>-3d`.
+
+Todas atiram, recarregam e mostram as mesmas animações feitas no Blender. Criado em 16/10/2026 a pedido do Felipe
 ("faz um mod do minecraft com esse revolver"), com plano aprovado; repositório público (escolha dele).
 Extras aprovados por ele: sons, receitas e partículas (o coice na câmera ele não quis). O `CLAUDE.md` da
 raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que decidiu a abordagem está em
@@ -14,6 +19,10 @@ raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que dec
 # 1. modelo e animações (lê o .blend de cada projeto; não mexe nele)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\revolver-3d\modelo\revolver.blend --python ferramentas\exportar_modelo.py
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\deagle-3d\modelo\deagle.blend --python ferramentas\exportar_deagle.py
+# as armas novas: o .blend do projeto e o id (ak47, m4a4, m4a1, metralhadora, escopeta, sniper)
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b ..\ak47-3d\modelo\ak47.blend --python ferramentas\exportar_arma.py -- ak47
+# a imagem da luneta da sniper (textures/gui/luneta.png)
+.venv\Scripts\python.exe ferramentas\gerar_luneta.py
 # 2. sons (precisa do .venv: python -m venv .venv; .venv\Scripts\python.exe -m pip install av==17.0.1 numpy==2.5.2)
 .venv\Scripts\python.exe ferramentas\gerar_sons.py
 # 3. compilar e testar (o jar sai em build\libs)
@@ -21,12 +30,13 @@ raiz vale aqui também; o `README.md` explica o mod para ele. A pesquisa que dec
 # 4. prévia da mão e do inventário, sem abrir o jogo (ferramentas\saida\previa-*.png)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python ferramentas\previa_mao.py
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python ferramentas\previa_mao.py -- deagle
+# (ou o id de qualquer arma nova: -- ak47, -- sniper...)
 ```
 
 O exportador termina com uma conferência (peça exportada + matriz do quadro contra o Blender; tem que dar
 erro perto de 1e-6 bloco) e grava `ferramentas/exportacao.txt` (`exportacao-deagle.txt` na deagle). Os dois
 exportadores dividem o `ferramentas/comum.py` (espaço do item, escrita do OBJ, exibição na mão, ícones); a saída do
-revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew.bat test`, 35) conferem:
+revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew.bat test`, 39) conferem:
 
 - a lógica do tambor e a do pente;
 - que os quadros do Java batem com os dos arquivos exportados;
@@ -153,9 +163,60 @@ aprovado com munição .50 AE própria. O modelo é o do `deagle-3d`.
 - **Tecla R e nome do mod:** a tecla R recarrega a arma que estiver na mão (`RecarregarMsg` decide pelo item). O
   nome do mod passou para "Revólver e Desert Eagle", e a categoria de teclas para "Armas".
 
+## As seis armas novas (2.0.0, 16/10/2026)
+
+Pedido dele: "agora faça uma metralhadora, uma 12, uma ak47, uma m4a4, uma m4a1 e uma sniper, faça um agente para
+cada [...] cada uma deve ter a sua munição específica com o seu dano". O que ficou decidido:
+
+- **Referências:** AK-47, M4A4 e M4A1-S seguem as do CS2. Metralhadora e 12 são desenho próprio, escolha dele (o CS2
+  tem as duas, e ele foi avisado). A sniper é de desenho próprio, nada parecida com a AWP, pedido dele.
+- **Munição:** as duas M4 dividem o 5,56 (escolha dele; a M4A1-S bate 10% mais pelo `fatorDano`).
+- **Dano do cartucho comum:** a proposta aprovada, metralhadora 10, 12 com 8 bagos de 4, AK 12, M4A4 10, M4A1-S 11
+  e sniper 50. Os tipos multiplicam como no revólver. Capacidades: 100, 8, 30, 30, 20 e 5.
+- **Projetos:** cada modelo foi feito por uma sessão em paralelo, num projeto `<id>-3d` público. Todos seguem o
+  mesmo contrato, escrito no `CLAUDE.md` de cada um:
+  - o empty raiz com o id, na pegada da mão;
+  - os nomes das peças (`ferrolho`, `alavanca`, `gatilho`, `pente` com `estojo_topo`/`bala_topo`, `botao_pente`,
+    `clarao`, `estojo_ejetado`; na escopeta, `telha` e `cartucho_carga`);
+  - as faixas `repouso`/`tiro`/`recarregar` (na escopeta, `inserir`);
+  - o `modelo/animacoes.json` com início, quadros, eventos e peças.
+
+  **Mexeu no contrato lá, quebra aqui.**
+- **Uma classe para as seis:** `logica/Arma` é um enum com uma linha de dados por arma: calibre, capacidade, tubo
+  ou pente, automática, quadros do tiro e da recarga, quadro do disparo e da troca, peças, espalhamento,
+  `fatorDano`, zoom, som de tiro e sons por quadro. O teste confere tudo contra o `animacoes/<id>.json`.
+  - `ArmaItem` faz a lógica e `ArmaRenderer` desenha.
+  - O estado é o componente `estado_arma` (`EstadoArma`): a munição é uma lista com o tipo de cada bala, a próxima
+    no lugar 0.
+  - `logica/Carregador` tem a conta da recarga, testada.
+- **Rajada:** as automáticas usam `startUsingItem` e atiram no `onUseTick`, uma vez por faixa de tiro. Com 3 ou 4
+  quadros a 30 qps, dá um tiro a cada 2 ticks (~10 por segundo). As outras atiram no quadro `disparo` pelo
+  `inventoryTick`, como a deagle.
+- **Tiro comum** (`Disparo.atirar` com bagos e espalhamento): o dano de todos os bagos que acertam a mesma criatura
+  é somado, e `invulnerableTime` é zerado antes do golpe. Sem isso a invencibilidade de 10 ticks do jogo engolia a
+  rajada e os bagos. Vale para o revólver e a deagle também.
+- **Escopeta:** a recarga é a faixa `inserir` repetida. Cada volta tira um cartucho do inventário no fim, põe no
+  tubo e, se ainda cabe e tem cartucho, começa outra. O espalhamento é de 5°.
+- **Luneta da sniper:** agachado em primeira pessoa com arma de `zoom` < 1, o campo de visão vai a 0,2. A imagem
+  `textures/gui/luneta.png` (do `gerar_luneta.py`) é desenhada no meio da tela com preto dos lados, e a mira do
+  jogo e a arma na mão somem (`RevolverCliente`: `zoom`, `luneta`, `semMira`, `semMao`).
+- **Exportador comum** (`ferramentas/exportar_arma.py`, com o `comum.py`):
+  - lê o contrato e tira as cores dos materiais do Blender, clareadas (brilho 0,24 + 1,4 v, até 0,92), e as
+    imagens dos materiais, clareadas e reduzidas a 128 px;
+  - o tamanho na mão sai do `CONFIG` (`"mao"` = comprimento na tela, em blocos);
+  - a terceira pessoa usa escala 0,32, um pouco maior que o tamanho real;
+  - o ícone de cada cartucho tem formato próprio (o de 12 tem o corpo vermelho de plástico e a ponta na cor do
+    tipo).
+- **Sons:** o tiro de cada uma é o `tiro.mp3` com outra cara (`tiro_variado` no `gerar_sons.py`); a M4A1-S é o tiro
+  abafado. Bomba, tampa e ferrolho da sniper são sintetizados. Pente e ferrolho usam os sons da deagle, e o cartucho
+  entrando na 12 usa o `bala_entra` do revólver.
+- **Receitas:** cada arma tem um padrão próprio (a M4A1-S leva lã para o silenciador, e a sniper uma luneta). Os
+  cartuchos de cada calibre têm padrão próprio, e os tipos melhores seguem a regra dos outros.
+
 ## O que ainda não foi visto
 
-O revólver ele testou no jogo (as correções da 1.0.1 vieram do que ele viu). **A Desert Eagle não foi aberta no
-Minecraft**: tamanho e ângulo na mão (só a prévia), a luz nas peças, os sons, o tiro, a troca de pente e o
-ferrolho aberto. A terceira pessoa das duas armas foi conferida só na conta. Shaders (Iris/Oculus) não
+O revólver ele testou no jogo (as correções da 1.0.1 vieram do que ele viu). **A Desert Eagle e as seis armas
+novas não foram abertas no Minecraft**: tamanho e ângulo na mão (só a prévia; as compridas usam a posição das
+pistolas), a luz nas peças, os sons, a rajada, os bagos, a luneta, as recargas e o desempenho (o corpo da M4A4 tem
+~79 mil triângulos). A terceira pessoa das duas armas foi conferida só na conta. Shaders (Iris/Oculus) não
 testados.

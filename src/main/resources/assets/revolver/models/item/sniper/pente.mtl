@@ -1,0 +1,14 @@
+newmtl polimero
+Kd 0.4200 0.4200 0.4500 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_escuro
+Kd 0.4647 0.4647 0.4920 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

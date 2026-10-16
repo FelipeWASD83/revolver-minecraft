@@ -1,0 +1,13 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/escopeta/gatilho.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "branco": "revolver:item/escopeta/branco",
+    "madeira": "revolver:item/escopeta/madeira",
+    "particle": "revolver:item/escopeta/branco"
+  }
+}

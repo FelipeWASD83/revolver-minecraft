@@ -10,5 +10,15 @@
   "subtitles.revolver.ferrolho": "Ferrolho fecha",
   "subtitles.revolver.trava": "Ferrolho trava aberto",
   "subtitles.revolver.pente_sai": "Pente sai",
-  "subtitles.revolver.pente_entra": "Pente entra"
+  "subtitles.revolver.pente_entra": "Pente entra",
+  "subtitles.revolver.tiro_ak47": "AK-47 dispara",
+  "subtitles.revolver.tiro_m4a4": "M4A4 dispara",
+  "subtitles.revolver.tiro_m4a1": "M4A1-S dispara, abafada",
+  "subtitles.revolver.tiro_metralhadora": "Metralhadora dispara",
+  "subtitles.revolver.tiro_escopeta": "Escopeta dispara",
+  "subtitles.revolver.tiro_sniper": "Sniper dispara",
+  "subtitles.revolver.bomba": "Escopeta bombeia",
+  "subtitles.revolver.tampa": "Tampa da metralhadora",
+  "subtitles.revolver.ferrolho_abre": "Ferrolho abre",
+  "subtitles.revolver.ferrolho_fecha": "Ferrolho fecha e trava"
 }

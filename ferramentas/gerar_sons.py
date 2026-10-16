@@ -199,6 +199,66 @@ def trava(semente):
     return som
 
 
+def tiro_variado(fator, ate, corte=None, mistura=0.0, forca=2.4, desce=0.4):
+    """O tiro baixado com outra cara: `fator` < 1 deixa mais grave e longo, `ate` corta a cauda, `corte` abafa
+    (passa-baixa) misturando `mistura` do som abafado."""
+    def gerar(_semente):
+        x = mais_grave(ler_arquivo(BAIXADOS / "tiro.mp3", 0.0, ate, desce=desce), fator)
+        if corte:
+            x = (1 - mistura) * x + mistura * passa_baixa(x, corte)
+        return alto(x, forca)
+    return gerar
+
+
+def tiro_silenciado(_semente):
+    """A M4A1-S: o tiro baixado curto e bem abafado, com o estalo mecânico do ferrolho por cima."""
+    rng = np.random.default_rng(7)
+    x = passa_baixa(passa_baixa(ler_arquivo(BAIXADOS / "tiro.mp3", 0.0, 0.32, desce=0.2), 700), 900)
+    som = alto(x, 1.6)
+    colar(som, 0.5 * clique(rng, 2600, 0.01, ruido=0.5), 0.02)
+    return som
+
+
+def bomba(semente):
+    """A telha da escopeta indo e voltando: dois estalos pesados com o deslize no meio."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.42))
+    colar(som, clique(rng, 1300, 0.03, ruido=0.8, dur=0.12), 0.0, 1.0)
+    t = tempo(0.12)
+    colar(som, passa_baixa(passa_alta(rng.standard_normal(t.size), 700), 3000) * np.sin(np.pi * t / t[-1]) * 0.3,
+          0.04)
+    colar(som, clique(rng, 1100, 0.035, ruido=0.9, dur=0.14), 0.2, 1.0)
+    return som
+
+
+def tampa(semente):
+    """A tampa de alimentação da metralhadora: um baque metálico grave."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.35))
+    colar(som, clique(rng, 900, 0.045, ruido=0.9, dur=0.2), 0.0, 1.0)
+    return som
+
+
+def ferrolho_abre(semente):
+    """O ferrolho da sniper girando e vindo para trás."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.35))
+    colar(som, clique(rng, 2200, 0.015, ruido=0.6), 0.0, 0.8)
+    t = tempo(0.18)
+    colar(som, passa_alta(rng.standard_normal(t.size), 2500) * np.sin(np.pi * t / t[-1]) * 0.2, 0.06)
+    return som
+
+
+def ferrolho_fecha(semente):
+    """O ferrolho da sniper indo à frente e travando."""
+    rng = np.random.default_rng(semente)
+    som = np.zeros(int(TAXA * 0.35))
+    t = tempo(0.14)
+    colar(som, passa_alta(rng.standard_normal(t.size), 2500) * np.sin(np.pi * t / t[-1]) * 0.2, 0.0)
+    colar(som, clique(rng, 1800, 0.02, ruido=0.7), 0.14, 1.0)
+    return som
+
+
 def _codificar(caminho, sinal):
     sai = av.open(str(caminho), "w", format="ogg")
     fluxo = sai.add_stream("libvorbis", rate=TAXA, layout="mono")
@@ -253,6 +313,18 @@ def principal():
         "trava": (sintetizado(trava, 2.5), 1, "Ferrolho trava aberto"),
         "pente_sai": (sintetizado(pente_sai, 2.5), 1, "Pente sai"),
         "pente_entra": (pente_entra_baixado, 1, "Pente entra"),
+        # as seis armas novas (16/10/2026): o tiro baixado com outra cara para cada uma
+        "tiro_ak47": (tiro_variado(0.88, 1.2, corte=2500, mistura=0.2, forca=2.6), 1, "AK-47 dispara"),
+        "tiro_m4a4": (tiro_variado(1.1, 1.0, forca=2.4), 1, "M4A4 dispara"),
+        "tiro_m4a1": (tiro_silenciado, 1, "M4A1-S dispara, abafada"),
+        "tiro_metralhadora": (tiro_variado(0.95, 0.7, desce=0.3, forca=2.6), 1, "Metralhadora dispara"),
+        "tiro_escopeta": (tiro_variado(0.68, 1.6, corte=1500, mistura=0.35, forca=2.8, desce=0.7), 1,
+                          "Escopeta dispara"),
+        "tiro_sniper": (tiro_variado(0.72, 2.6, corte=2200, mistura=0.25, forca=2.8, desce=1.4), 1, "Sniper dispara"),
+        "bomba": (sintetizado(bomba, 2.5), 1, "Escopeta bombeia"),
+        "tampa": (sintetizado(tampa, 2.5), 1, "Tampa da metralhadora"),
+        "ferrolho_abre": (sintetizado(ferrolho_abre, 2.5), 1, "Ferrolho abre"),
+        "ferrolho_fecha": (sintetizado(ferrolho_fecha, 2.5), 1, "Ferrolho fecha e trava"),
     }
     faltando = [n for n in ("tiro.mp3", "uzi-reload.mp3") if not (BAIXADOS / n).exists()]
     if faltando:

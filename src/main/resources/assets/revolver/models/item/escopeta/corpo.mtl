@@ -1,0 +1,34 @@
+newmtl aco_escuro
+Kd 0.4350 0.4350 0.4640 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_oxidado
+Kd 0.5280 0.5400 0.5760 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl latao
+Kd 0.9200 0.6900 0.3910 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl nogueira
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #madeira
+
+newmtl aco_receptor
+Kd 0.4982 0.5106 0.5480 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl borracha
+Kd 0.3450 0.3128 0.2852 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "LII",
+    "KTI",
+    "K  "
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:wool"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "K": {
+      "item": "minecraft:gray_dye"
+    },
+    "T": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "id": "revolver:m4a1",
+    "count": 1
+  }
+}

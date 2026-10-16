@@ -1,0 +1,19 @@
+newmtl aco_pente
+Kd 0.6807 0.6807 0.7020 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_escuro
+Kd 0.4277 0.4277 0.4430 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl polimero
+Kd 0.4500 0.4500 0.4350 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

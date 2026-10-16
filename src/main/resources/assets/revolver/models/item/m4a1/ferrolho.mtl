@@ -1,0 +1,9 @@
+newmtl aco_ferrolho
+Kd 0.7091 0.7091 0.7300 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

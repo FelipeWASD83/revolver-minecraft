@@ -1,0 +1,24 @@
+newmtl aluminio_anodizado
+Kd 0.4585 0.4720 0.4990 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_fosfatizado
+Kd 0.5231 0.5231 0.5480 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl polimero
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #polimero
+
+newmtl borracha
+Kd 0.4080 0.4080 0.4012 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

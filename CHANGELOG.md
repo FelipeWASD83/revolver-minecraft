@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.0.0 (16/10/2026)
+
+### Novo
+- Seis armas novas, cada uma com o modelo e as animações do Blender: AK-47, M4A4 e M4A1-S (as do CS2),
+  metralhadora, escopeta 12 e sniper .338 (desenho próprio).
+- Rajada segurando o botão na AK, nas duas M4 e na metralhadora; a escopeta solta 8 bagos e recarrega
+  cartucho por cartucho; a sniper tem luneta agachando.
+- Cinco munições novas, cada uma com aço, diamante e netherite: 7,62x39, 5,56 (das duas M4), 7,62x51, calibre 12
+  e .338 Lapua.
+- Sons de tiro de cada arma feitos do seu tiro.mp3, e os da bomba da 12, da tampa da metralhadora e do
+  ferrolho da sniper.
+
+### Mudou
+- O mod se chama Arsenal.
+- Tiro que acerta o mesmo bicho logo em seguida conta inteiro (antes a invencibilidade de meio segundo do jogo
+  engolia o segundo tiro).
+
 ## 1.2.1 (16/10/2026)
 
 ### Mudou

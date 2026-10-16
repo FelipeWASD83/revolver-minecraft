@@ -1,0 +1,21 @@
+EXPORTAÇÃO DA ARMA m4a1 PARA O MOD
+
+comprimento: 3.64 blocos
+
+corpo            48602 triângulos  (alca_transporte, anel_delta, argola, cano, capa_guarda, coronha, empunhadura, guarda_mao, guarda_mato, massa_mira, pino_frente, pino_gatilho, pino_tras, porca_tubo, receptor, receptor_inferior, silenciador, soleira, tampa_janela, tubo)
+ferrolho           764 triângulos  (ferrolho)
+alavanca          4464 triângulos  (alavanca)
+gatilho           1312 triângulos  (gatilho)
+pente             6756 triângulos  (pente)
+botao_pente        192 triângulos  (botao_pente)
+clarao              66 triângulos  (clarao)
+estojo             640 triângulos  (estojo_ejetado)
+bala_comum         320 triângulos  (bala_topo)
+bala_aco           320 triângulos  (bala_topo)
+bala_diamante      320 triângulos  (bala_topo)
+bala_netherite     320 triângulos  (bala_topo)
+
+tiro: 4 quadros, eventos {"disparo": 2}
+recarregar: 70 quadros, eventos {"pente_sai": 14, "troca": 31, "pente_entra": 48, "alavanca": 54, "ferrolho": 58}
+peças que mexem: ferrolho, alavanca, gatilho, pente, botao_pente
+conferência (peça exportada + matriz do quadro contra o Blender): maior erro 0.0000018 bloco

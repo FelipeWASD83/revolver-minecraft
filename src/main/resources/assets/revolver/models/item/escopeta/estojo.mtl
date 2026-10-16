@@ -1,0 +1,14 @@
+newmtl latao
+Kd 0.9200 0.6900 0.3910 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl plastico_vermelho
+Kd 0.7440 0.0517 0.0413 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl espoleta
+Kd 0.9200 0.8903 0.8310 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

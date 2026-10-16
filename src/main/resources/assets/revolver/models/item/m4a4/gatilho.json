@@ -1,0 +1,13 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/m4a4/gatilho.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "branco": "revolver:item/m4a4/branco",
+    "polimero": "revolver:item/m4a4/polimero",
+    "particle": "revolver:item/m4a4/branco"
+  }
+}

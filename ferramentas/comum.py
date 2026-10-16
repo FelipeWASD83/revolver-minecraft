@@ -176,11 +176,12 @@ def exibicao(A, palma_blend, tabela):
 
 
 def icone_cartucho(nome, ponta_escura, ponta_clara, a=(3.2, 12.8), b=(12.8, 3.2), aro=2.1, corpo=1.6,
-                   inicio_ponta=0.64, curva_ponta=0.86):
+                   inicio_ponta=0.64, curva_ponta=0.86, corpo_cores=None, base_ate=None):
     """Ícone 16x16 do cartucho, deitado na diagonal com a ponta para cima e à direita (como as ferramentas do
     jogo): aro escuro embaixo, estojo de latão com um lado claro e outro escuro, ponta arredondada na cor do tipo e
     contorno escuro. Cada pixel é decidido pela distância ao eixo, então o corpo sai cheio. `a` e `b` são a base e a
-    ponta (y cresce para baixo); `aro` e `corpo`, as meias larguras."""
+    ponta (y cresce para baixo); `aro` e `corpo`, as meias larguras. `corpo_cores` (normal, escura, clara) pinta o
+    corpo a partir de `base_ate` (o cartucho de escopeta: base de latão e tubo de plástico)."""
     n = 16
     px = [[(0, 0, 0, 0) for _ in range(n)] for _ in range(n)]
     latao, latao_esc, latao_cla = (0.86, 0.66, 0.30, 1), (0.56, 0.39, 0.15, 1), (0.98, 0.86, 0.55, 1)
@@ -205,7 +206,11 @@ def icone_cartucho(nome, ponta_escura, ponta_clara, a=(3.2, 12.8), b=(12.8, 3.2)
             if t < 0.1:
                 cor = cor_aro
             elif t < inicio_ponta:
-                cor = latao_cla if d < -0.55 else (latao_esc if d > 0.55 else latao)
+                if corpo_cores and t >= base_ate:
+                    c0, c1, c2 = ((*c, 1) for c in corpo_cores)
+                    cor = c2 if d < -0.55 else (c1 if d > 0.55 else c0)
+                else:
+                    cor = latao_cla if d < -0.55 else (latao_esc if d > 0.55 else latao)
             else:
                 cor = ponta_cla if d < -0.3 else ponta
             px[y][x] = cor

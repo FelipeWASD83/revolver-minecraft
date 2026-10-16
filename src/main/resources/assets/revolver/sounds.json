@@ -72,5 +72,65 @@
     "sounds": [
       "revolver:pente_entra"
     ]
+  },
+  "tiro_ak47": {
+    "subtitle": "subtitles.revolver.tiro_ak47",
+    "sounds": [
+      "revolver:tiro_ak47"
+    ]
+  },
+  "tiro_m4a4": {
+    "subtitle": "subtitles.revolver.tiro_m4a4",
+    "sounds": [
+      "revolver:tiro_m4a4"
+    ]
+  },
+  "tiro_m4a1": {
+    "subtitle": "subtitles.revolver.tiro_m4a1",
+    "sounds": [
+      "revolver:tiro_m4a1"
+    ]
+  },
+  "tiro_metralhadora": {
+    "subtitle": "subtitles.revolver.tiro_metralhadora",
+    "sounds": [
+      "revolver:tiro_metralhadora"
+    ]
+  },
+  "tiro_escopeta": {
+    "subtitle": "subtitles.revolver.tiro_escopeta",
+    "sounds": [
+      "revolver:tiro_escopeta"
+    ]
+  },
+  "tiro_sniper": {
+    "subtitle": "subtitles.revolver.tiro_sniper",
+    "sounds": [
+      "revolver:tiro_sniper"
+    ]
+  },
+  "bomba": {
+    "subtitle": "subtitles.revolver.bomba",
+    "sounds": [
+      "revolver:bomba"
+    ]
+  },
+  "tampa": {
+    "subtitle": "subtitles.revolver.tampa",
+    "sounds": [
+      "revolver:tampa"
+    ]
+  },
+  "ferrolho_abre": {
+    "subtitle": "subtitles.revolver.ferrolho_abre",
+    "sounds": [
+      "revolver:ferrolho_abre"
+    ]
+  },
+  "ferrolho_fecha": {
+    "subtitle": "subtitles.revolver.ferrolho_fecha",
+    "sounds": [
+      "revolver:ferrolho_fecha"
+    ]
   }
 }

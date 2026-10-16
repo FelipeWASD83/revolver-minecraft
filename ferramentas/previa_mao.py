@@ -1,6 +1,6 @@
 """Prévia de como o revólver (ou a deagle) aparece na mão, sem abrir o jogo.
 
-Roda no Blender (depois de `--`, `deagle` faz a da deagle):
+Roda no Blender (depois de `--`, o id da arma: `deagle`, `ak47`...; sem nada, o revólver):
 
     "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe" -b --factory-startup --python ferramentas\\previa_mao.py
     "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe" -b --factory-startup --python ferramentas\\previa_mao.py -- deagle
@@ -24,10 +24,16 @@ PASTA = Path(__file__).resolve().parent.parent
 MODELOS = PASTA / "src" / "main" / "resources" / "assets" / "revolver" / "models" / "item"
 SAIDA = PASTA / "ferramentas" / "saida"
 CORES = {"madeira": (0.45, 0.22, 0.1), "tempera": (0.55, 0.55, 0.57), "borracha": (0.25, 0.25, 0.26)}
-ARMA = "deagle" if "deagle" in (sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []) else "revolver"
-PECAS = {"revolver": ("corpo", "cao", "gatilho", "tambor", "portinhola", "botao"),
-         "deagle": ("corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente")}[ARMA]
-PREFIXO = "previa-" if ARMA == "revolver" else "previa-deagle-"
+ARGS = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+ARMA = ARGS[0] if ARGS else "revolver"
+if ARMA == "revolver":
+    PECAS = ("corpo", "cao", "gatilho", "tambor", "portinhola", "botao")
+elif ARMA == "deagle":
+    PECAS = ("corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente")
+else:        # as armas novas: as peças que mexem estão no arquivo de animação exportado
+    _anim = PASTA / "src" / "main" / "resources" / "assets" / "revolver" / "animacoes" / f"{ARMA}.json"
+    PECAS = ["corpo"] + json.loads(_anim.read_text(encoding="utf-8"))["pecas"]
+PREFIXO = "previa-" if ARMA == "revolver" else f"previa-{ARMA}-"
 
 
 def ler_obj(nome):

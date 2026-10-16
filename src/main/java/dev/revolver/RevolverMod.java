@@ -25,6 +25,12 @@ public final class RevolverMod {
             for (var cartucho : Registros.CARTUCHOS.values()) evento.accept(cartucho.get());
             evento.accept(Registros.DEAGLE.get());
             for (var cartucho : Registros.CARTUCHOS_50.values()) evento.accept(cartucho.get());
+            for (var arma : Registros.ARMAS.entrySet()) {
+                evento.accept(arma.getValue().get());
+                for (var cartucho : Registros.CARTUCHOS_DAS_ARMAS.get(arma.getKey().calibre).values()) {
+                    evento.accept(cartucho.get());
+                }
+            }
         }
     }
 

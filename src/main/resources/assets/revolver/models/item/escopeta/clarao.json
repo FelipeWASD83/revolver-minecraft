@@ -1,0 +1,13 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/escopeta/clarao.obj",
+  "flip_v": true,
+  "shade_quads": false,
+  "automatic_culling": false,
+  "emissive_ambient": true,
+  "textures": {
+    "branco": "revolver:item/escopeta/branco",
+    "madeira": "revolver:item/escopeta/madeira",
+    "particle": "revolver:item/escopeta/branco"
+  }
+}

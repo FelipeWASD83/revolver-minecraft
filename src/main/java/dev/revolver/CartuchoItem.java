@@ -3,6 +3,7 @@ package dev.revolver;
 import dev.revolver.logica.Calibre;
 import dev.revolver.logica.TipoBala;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,9 @@ public class CartuchoItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext contexto, List<Component> linhas, TooltipFlag flag) {
-        linhas.add(Component.translatable("item.revolver.cartucho.dano", (int) tipo.dano(calibre))
-                .withStyle(ChatFormatting.GRAY));
+        MutableComponent texto = calibre.bagos > 1
+                ? Component.translatable("item.revolver.cartucho.dano_bagos", Math.round(tipo.dano(calibre)), calibre.bagos)
+                : Component.translatable("item.revolver.cartucho.dano", Math.round(tipo.dano(calibre)));
+        linhas.add(texto.withStyle(ChatFormatting.GRAY));
     }
 }

@@ -24,6 +24,8 @@ public record RecarregarMsg(boolean outraMao) implements CustomPacketPayload {
         InteractionHand mao = msg.outraMao() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         if (contexto.player().getItemInHand(mao).getItem() instanceof DeagleItem) {
             DeagleItem.recarregar(contexto.player(), mao);
+        } else if (contexto.player().getItemInHand(mao).getItem() instanceof ArmaItem) {
+            ArmaItem.recarregar(contexto.player(), mao);
         } else {
             RevolverItem.recarregar(contexto.player(), mao);
         }

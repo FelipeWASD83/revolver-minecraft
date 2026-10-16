@@ -1,0 +1,39 @@
+newmtl anodizado
+Kd 0.6523 0.6631 0.6740 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl branco
+Kd 0.7000 0.7000 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_escuro
+Kd 0.4277 0.4277 0.4430 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco
+Kd 0.6237 0.6237 0.6460 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_fosfatado
+Kd 0.5284 0.5284 0.5410 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl polimero
+Kd 0.4500 0.4500 0.4350 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl silenciador
+Kd 0.5141 0.5141 0.5270 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl borracha
+Kd 0.4220 0.4220 0.4220 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

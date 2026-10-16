@@ -1,0 +1,20 @@
+EXPORTAÇÃO DA ARMA ak47 PARA O MOD
+
+comprimento: 3.56 blocos
+
+corpo            39630 triângulos  (alca_mira, anel_guarda_mao, bloco_alca, bloco_gas, caixa, cano, coronha, guarda_mao_inferior, guarda_mao_superior, guarda_mato, massa_mira, punho, quebra_chamas, rebites, retentor, seletor, soleira, tampa, tubo_gas, vareta)
+ferrolho          1776 triângulos  (ferrolho)
+gatilho           1284 triângulos  (gatilho)
+botao_pente       1256 triângulos  (botao_pente)
+pente             8720 triângulos  (pente)
+clarao              90 triângulos  (clarao)
+estojo             816 triângulos  (estojo_ejetado)
+bala_comum         400 triângulos  (bala_topo)
+bala_aco           400 triângulos  (bala_topo)
+bala_diamante      400 triângulos  (bala_topo)
+bala_netherite     400 triângulos  (bala_topo)
+
+tiro: 4 quadros, eventos {"disparo": 2}
+recarregar: 75 quadros, eventos {"pente_sai": 18, "troca": 35, "pente_entra": 54, "ferrolho": 64}
+peças que mexem: ferrolho, gatilho, botao_pente, pente
+conferência (peça exportada + matriz do quadro contra o Blender): maior erro 0.0000015 bloco

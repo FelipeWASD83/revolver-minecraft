@@ -8,8 +8,8 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="Felipe"
 description='''
-Um revólver de ação simples (estilo Colt, cabo de nogueira) que recarrega pela portinhola e uma
-Desert Eagle .50 AE que troca o pente, com as animações feitas no Blender. Recarregar: tecla R.
+Oito armas com as animações feitas no Blender: revólver, Desert Eagle, AK-47, M4A4, M4A1-S, metralhadora,
+escopeta 12 e sniper .338, cada uma com a sua munição. Recarregar: tecla R. Luneta da sniper: agachar.
 '''
 
 [[dependencies.${mod_id}]]

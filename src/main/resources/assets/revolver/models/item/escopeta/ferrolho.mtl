@@ -1,0 +1,9 @@
+newmtl aco_polido
+Kd 0.9044 0.9044 0.9200 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_escuro
+Kd 0.4350 0.4350 0.4640 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco

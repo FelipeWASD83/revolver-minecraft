@@ -1,0 +1,9 @@
+newmtl aluminio_pente
+Kd 0.5060 0.4927 0.4527 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl aco_fosfatizado
+Kd 0.5231 0.5231 0.5480 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
