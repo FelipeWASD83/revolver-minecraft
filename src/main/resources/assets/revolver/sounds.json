@@ -1,0 +1,48 @@
+{
+  "tiro": {
+    "subtitle": "subtitles.revolver.tiro",
+    "sounds": [
+      "revolver:tiro1",
+      "revolver:tiro2",
+      "revolver:tiro3"
+    ]
+  },
+  "engatilhar": {
+    "subtitle": "subtitles.revolver.engatilhar",
+    "sounds": [
+      "revolver:engatilhar"
+    ]
+  },
+  "clique_seco": {
+    "subtitle": "subtitles.revolver.clique_seco",
+    "sounds": [
+      "revolver:clique_seco"
+    ]
+  },
+  "portinhola": {
+    "subtitle": "subtitles.revolver.portinhola",
+    "sounds": [
+      "revolver:portinhola"
+    ]
+  },
+  "estojo_cai": {
+    "subtitle": "subtitles.revolver.estojo_cai",
+    "sounds": [
+      "revolver:estojo_cai1",
+      "revolver:estojo_cai2",
+      "revolver:estojo_cai3"
+    ]
+  },
+  "bala_entra": {
+    "subtitle": "subtitles.revolver.bala_entra",
+    "sounds": [
+      "revolver:bala_entra"
+    ]
+  },
+  "tambor_gira": {
+    "subtitle": "subtitles.revolver.tambor_gira",
+    "sounds": [
+      "revolver:tambor_gira"
+    ]
+  }
+}

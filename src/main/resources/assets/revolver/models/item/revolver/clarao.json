@@ -1,0 +1,14 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/revolver/clarao.obj",
+  "flip_v": true,
+  "shade_quads": false,
+  "automatic_culling": false,
+  "emissive_ambient": true,
+  "textures": {
+    "madeira": "revolver:item/revolver/madeira",
+    "tempera": "revolver:item/revolver/tempera",
+    "branco": "revolver:item/revolver/branco",
+    "particle": "revolver:item/revolver/madeira"
+  }
+}

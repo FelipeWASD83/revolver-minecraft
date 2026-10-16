@@ -1,0 +1,14 @@
+{
+  "item.revolver.revolver": "Revolver",
+  "item.revolver.revolver.balas": "Rounds: %s of 6",
+  "item.revolver.cartucho_45": ".45 Cartridge",
+  "key.categories.revolver": "Revolver",
+  "key.revolver.recarregar": "Reload revolver",
+  "subtitles.revolver.tiro": "Revolver fires",
+  "subtitles.revolver.engatilhar": "Hammer cocks",
+  "subtitles.revolver.clique_seco": "Revolver dry-fires",
+  "subtitles.revolver.portinhola": "Loading gate",
+  "subtitles.revolver.estojo_cai": "Casing drops",
+  "subtitles.revolver.bala_entra": "Round loads",
+  "subtitles.revolver.tambor_gira": "Cylinder turns"
+}

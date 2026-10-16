@@ -1,0 +1,14 @@
+{
+  "item.revolver.revolver": "Revólver",
+  "item.revolver.revolver.balas": "Balas: %s de 6",
+  "item.revolver.cartucho_45": "Cartucho .45",
+  "key.categories.revolver": "Revólver",
+  "key.revolver.recarregar": "Recarregar o revólver",
+  "subtitles.revolver.tiro": "Revólver dispara",
+  "subtitles.revolver.engatilhar": "Cão armado",
+  "subtitles.revolver.clique_seco": "Revólver dá clique seco",
+  "subtitles.revolver.portinhola": "Portinhola do revólver",
+  "subtitles.revolver.estojo_cai": "Estojo cai",
+  "subtitles.revolver.bala_entra": "Bala entra no tambor",
+  "subtitles.revolver.tambor_gira": "Tambor gira"
+}

@@ -1,0 +1,14 @@
+newmtl aco_temperado
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #tempera
+
+newmtl aco_azulado
+Kd 0.6400 0.6600 0.7000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #branco
+
+newmtl madeira
+Kd 1.0000 1.0000 1.0000 1.0
+Ka 0.0 0.0 0.0
+map_Kd #madeira
