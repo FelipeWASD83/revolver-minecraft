@@ -2,9 +2,7 @@
   "tiro": {
     "subtitle": "subtitles.revolver.tiro",
     "sounds": [
-      "revolver:tiro1",
-      "revolver:tiro2",
-      "revolver:tiro3"
+      "revolver:tiro"
     ]
   },
   "engatilhar": {

@@ -120,6 +120,33 @@ def escrever_obj(nome, bm, materiais, emissivo=False):
     linhas = [f"# {nome}: gerado por ferramentas/exportar_modelo.py a partir do revolver-3d", f"mtllib {nome}.mtl"]
     for v in me.vertices:
         linhas.append("v %.6f %.6f %.6f" % tuple(v.co))
+    # No atlas do Minecraft a textura não repete: coordenada fora de 0..1 pega a textura vizinha, e a do canto
+    # exato mistura com a borda transparente no mipmap (era o pontilhado no cano). Cor lisa vai no centro do
+    # sprite branco; textura que passa da borda é encolhida para caber, com folga, por material.
+    def textura_de(mi):
+        return MATERIAIS.get(materiais[mi], ("branco", None))[0] if mi < len(materiais) else "branco"
+
+    faixa = {}
+    if uv:
+        for p in me.polygons:
+            if textura_de(p.material_index) == "branco":
+                continue
+            for li in p.loop_indices:
+                u, v = uv[li].uv
+                f = faixa.setdefault(p.material_index, [u, u, v, v])
+                f[0], f[1], f[2], f[3] = min(f[0], u), max(f[1], u), min(f[2], v), max(f[3], v)
+
+    def coordenada(mi, li):
+        if not uv or textura_de(mi) == "branco":
+            return (0.5, 0.5)
+        u, v = uv[li].uv
+        u0, u1, v0, v1 = faixa[mi]
+        if u0 < 0.01 or u1 > 0.99:
+            u = 0.01 + 0.98 * (u - u0) / max(u1 - u0, 1e-9)
+        if v0 < 0.01 or v1 > 0.99:
+            v = 0.01 + 0.98 * (v - v0) / max(v1 - v0, 1e-9)
+        return (round(u, 6), round(v, 6))
+
     idx_vt, idx_vn = {}, {}
     vts, vns = [], []
     faces = []
@@ -127,7 +154,7 @@ def escrever_obj(nome, bm, materiais, emissivo=False):
         canto = []
         for li in p.loop_indices:
             vi = me.loops[li].vertex_index
-            t = (round(uv[li].uv[0], 6), round(uv[li].uv[1], 6)) if uv else (0.5, 0.5)
+            t = coordenada(p.material_index, li)
             n = tuple(round(c, 5) for c in normais[li].vector)
             if t not in idx_vt:
                 idx_vt[t] = len(vts) + 1

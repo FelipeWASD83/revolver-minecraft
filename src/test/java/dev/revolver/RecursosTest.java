@@ -49,6 +49,15 @@ class RecursosTest {
             for (String l : obj) {
                 if (l.startsWith("f ")) assertTrue(l.split(" ").length <= 5, peca + ": face grande demais");
             }
+            // no atlas a textura não repete: coordenada fora (ou no canto exato) do sprite deixa a peça pontilhada
+            for (String l : obj) {
+                if (!l.startsWith("vt ")) continue;
+                String[] p = l.split(" ");
+                for (int k = 1; k <= 2; k++) {
+                    double c = Double.parseDouble(p[k]);
+                    assertTrue(c >= 0.005 && c <= 0.995, peca + ": coordenada de textura na borda: " + l);
+                }
+            }
         }
     }
 

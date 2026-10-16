@@ -58,10 +58,21 @@ quando ele pedir.
   da portinhola (1, 0, 5, 4, 3, 2), gasta um cartucho por câmara sem bala e, sem cartucho, só tira os
   estojos vazios. No criativo não gasta.
 - **O tiro sai no quadro em que o cão cai** (tick 14 depois do clique), como na animação: é um revólver
-  de ação simples, o polegar arma antes. Raio no servidor até 64 blocos, dano 9.
-- **Sons gerados por código** (`ferramentas/gerar_sons.py`) e codificados em OGG Vorbis pelo PyAV 17.0.1,
-  versão que passa pelo Smart App Control. O mixdown de áudio do Blender sem janela grava só o começo
-  do som: não usar.
+  de ação simples, o polegar arma antes. Raio no servidor até 64 blocos, **dano 20** (pedido dele na
+  1.0.1: 9 era pouco perto dos 8 da espada de netherite).
+- **Sons** (`ferramentas/gerar_sons.py`, OGG Vorbis pelo PyAV 17.0.1, versão que passa pelo Smart App
+  Control; o mixdown de áudio do Blender sem janela grava só o começo do som: não usar). **O tiro e a
+  bala entrando são os arquivos que ele baixou** (`ferramentas/sons-baixados/`, fora do git porque a
+  licença é desconhecida e o repositório é público): o tiro inteiro até 1,6 s com a cauda sumindo, e só
+  o primeiro dos três sons do `uzi-reload.mp3`, tocado uma vez por bala (pedido dele). Os outros
+  (cão, clique seco, portinhola, estojo, tambor) continuam sintetizados. Tudo mono, comprimido com tanh
+  e gravado no pico mais alto sem passar de 0,98 depois de codificado (o Vorbis estoura além do
+  original; o gerador confere e recodifica). No jogo todos tocam com volume 1,0 (o máximo; o tiro usa
+  4,0, que só aumenta o alcance). Ele achou os sons da 1.0.0 baixos e sem cara de tiro.
+- **Coordenada de textura sempre dentro do sprite** (o exportador põe a cor lisa no centro do branco e
+  encolhe a textura que passa da borda): no atlas a textura não repete, e a do canto exato mistura com
+  a borda transparente no mipmap. Na 1.0.0 isso deixou o cano, a haste, a mira e os parafusos
+  pontilhados, quase invisíveis (print dele). Há teste.
 - **O nome do mod vai como escape Unicode no `gradle.properties`** (`Rev\u00f3lver`): o arquivo é lido
   como Latin-1 e o "ó" direto sai duplicado no jar.
 - **Fora da regra de atualização dentro do app**: mod é carregado pelo launcher, não é app.

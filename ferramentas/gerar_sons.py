@@ -1,5 +1,5 @@
-"""Gera os sons do revólver por síntese (sem gravação nem FL Studio) e grava em OGG Vorbis, que é o que o
-Minecraft aceita.
+"""Gera os sons do revólver e grava em OGG Vorbis, que é o que o Minecraft aceita. O tiro e a bala entrando
+vêm dos arquivos que o Felipe baixou (ferramentas/sons-baixados, fora do git); o resto é síntese.
 
     .venv\\Scripts\\python.exe ferramentas\\gerar_sons.py
 
@@ -122,13 +122,47 @@ def tambor_gira(semente):
     return som
 
 
-def gravar_ogg(nome, sinal):
-    sinal = sinal / max(1e-9, np.abs(sinal).max()) * 0.92
-    caminho = SONS / f"{nome}.ogg"
+BAIXADOS = PASTA / "ferramentas" / "sons-baixados"
+
+
+def ler_arquivo(caminho, inicio, fim, sobe=0.005, desce=0.04):
+    """Trecho de um som baixado, em mono 44,1 kHz, com entrada e saída suaves."""
+    c = av.open(str(caminho))
+    rs = av.AudioResampler(format="flt", layout="mono", rate=TAXA)
+    partes = []
+    for q in c.decode(audio=0):
+        partes += [r.to_ndarray().reshape(-1) for r in rs.resample(q)]
+    partes += [r.to_ndarray().reshape(-1) for r in rs.resample(None)]
+    c.close()
+    x = np.concatenate(partes)[int(inicio * TAXA):int(fim * TAXA)].astype(np.float64)
+    n_sobe, n_desce = int(sobe * TAXA), int(desce * TAXA)
+    x[:n_sobe] *= np.linspace(0, 1, n_sobe)
+    x[-n_desce:] *= np.linspace(1, 0, n_desce) ** 2
+    return x
+
+
+def alto(x, forca):
+    """Normaliza pelo pico e comprime com tanh: o som fica mais cheio sem estourar."""
+    x = x / max(1e-9, np.abs(x).max())
+    return np.tanh(forca * x) / np.tanh(forca)
+
+
+def tiro_baixado(_semente):
+    # o disparo vai até ~0,5 s; o resto é a cauda de eco, que some aos poucos até 1,6 s
+    return alto(ler_arquivo(BAIXADOS / "tiro.mp3", 0.0, 1.6, desce=0.6), 2.2)
+
+
+def bala_baixada(_semente):
+    # o uzi-reload.mp3 tem três sons (0,09 s, 1,67 s e 2,64 s); só o primeiro, repetido a cada bala
+    return alto(ler_arquivo(BAIXADOS / "uzi-reload.mp3", 0.04, 0.34), 1.8)
+
+
+def _codificar(caminho, sinal):
     sai = av.open(str(caminho), "w", format="ogg")
     fluxo = sai.add_stream("libvorbis", rate=TAXA, layout="mono")
     reamostra = av.AudioResampler(format="fltp", layout="mono", rate=TAXA)
-    quadro = av.AudioFrame.from_ndarray(np.int16(sinal * 32767)[None, :], format="s16", layout="mono")
+    quadro = av.AudioFrame.from_ndarray(np.int16(np.clip(sinal, -1, 1) * 32767)[None, :], format="s16",
+                                        layout="mono")
     quadro.sample_rate = TAXA
     for q in reamostra.resample(quadro) + reamostra.resample(None):
         for pac in fluxo.encode(q):
@@ -137,24 +171,48 @@ def gravar_ogg(nome, sinal):
         sai.mux(pac)
     sai.close()
     volta = av.open(str(caminho))
-    dur = sum(q.samples for q in volta.decode(audio=0)) / TAXA
+    x = np.concatenate([q.to_ndarray().reshape(-1) for q in volta.decode(audio=0)])
     volta.close()
+    return x.size / TAXA, float(np.abs(x).max())
+
+
+def gravar_ogg(nome, sinal):
+    """Grava o mais alto possível sem estourar: o Vorbis passa um pouco do pico original, então codifica,
+    lê de volta e, se passou de 0,98, baixa o ganho na medida e codifica de novo."""
+    sinal = sinal / max(1e-9, np.abs(sinal).max()) * 0.97
+    caminho = SONS / f"{nome}.ogg"
+    for _ in range(4):
+        dur, pico = _codificar(caminho, sinal)
+        if pico <= 0.98:
+            break
+        sinal = sinal * (0.96 / pico)
     return dur
+
+
+def sintetizado(funcao, forca):
+    """Os sons feitos por síntese, mais fortes que na 1.0.0 (estavam baixos)."""
+    return lambda semente: alto(funcao(semente), forca)
 
 
 def principal():
     SONS.mkdir(parents=True, exist_ok=True)
+    # tiro e bala entrando: os sons que o Felipe baixou (16/10/2026); o resto continua sintetizado
+    eventos = {
+        "tiro": (tiro_baixado, 1, "Revólver dispara"),
+        "engatilhar": (sintetizado(engatilhar, 2.5), 1, "Cão armado"),
+        "clique_seco": (sintetizado(clique_seco, 2.5), 1, "Revólver dá clique seco"),
+        "portinhola": (sintetizado(portinhola, 2.5), 1, "Portinhola do revólver"),
+        "estojo_cai": (sintetizado(estojo_cai, 2.0), 3, "Estojo cai"),
+        "bala_entra": (bala_baixada, 1, "Bala entra no tambor"),
+        "tambor_gira": (sintetizado(tambor_gira, 2.5), 1, "Tambor gira"),
+    }
+    faltando = [n for n in ("tiro.mp3", "uzi-reload.mp3") if not (BAIXADOS / n).exists()]
+    if faltando:
+        # os arquivos baixados não vão para o repositório; sem eles, os OGG que já existem ficam como estão
+        print("Sem", ", ".join(faltando), "em ferramentas/sons-baixados: nada foi gerado.")
+        return
     for velho in SONS.glob("*.ogg"):
         velho.unlink()
-    eventos = {
-        "tiro": (tiro, 3, "Revólver dispara"),
-        "engatilhar": (engatilhar, 1, "Cão armado"),
-        "clique_seco": (clique_seco, 1, "Revólver dá clique seco"),
-        "portinhola": (portinhola, 1, "Portinhola do revólver"),
-        "estojo_cai": (estojo_cai, 3, "Estojo cai"),
-        "bala_entra": (bala_entra, 1, "Bala entra no tambor"),
-        "tambor_gira": (tambor_gira, 1, "Tambor gira"),
-    }
     sons_json = {}
     for evento, (funcao, variacoes, legenda) in eventos.items():
         arquivos = []

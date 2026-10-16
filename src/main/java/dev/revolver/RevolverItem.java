@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class RevolverItem extends Item {
     public static final double ALCANCE = 64.0;
-    public static final float DANO = 9.0f;
+    public static final float DANO = 20.0f;     // 10 corações (pedido dele: a espada de netherite dá 8)
 
     public RevolverItem(Properties propriedades) {
         super(propriedades);
@@ -92,7 +92,7 @@ public class RevolverItem extends Item {
 
     private void tickTiro(ItemStack stack, Level level, Player jogador, EstadoRevolver e, long dt) {
         if (dt == Tempos.tick(Tempos.TIRO_ENGATILHA)) {
-            som(level, jogador, Registros.SOM_ENGATILHAR.get(), 0.7f, 1.0f);
+            som(level, jogador, Registros.SOM_ENGATILHAR.get(), 1.0f, 1.0f);
         }
         if (dt == Tempos.tick(Tempos.TIRO_DISPARO)) {
             if (e.acao() == EstadoRevolver.TIRO) {
@@ -101,7 +101,7 @@ public class RevolverItem extends Item {
                 som(level, jogador, Registros.SOM_TIRO.get(), 4.0f, 0.95f + level.random.nextFloat() * 0.1f);
                 atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack);
             } else {
-                som(level, jogador, Registros.SOM_CLIQUE_SECO.get(), 0.8f, 1.0f);
+                som(level, jogador, Registros.SOM_CLIQUE_SECO.get(), 1.0f, 1.0f);
             }
         }
         if (dt >= Tempos.tickFimTiro()) {
@@ -111,8 +111,8 @@ public class RevolverItem extends Item {
     }
 
     private void tickRecarga(ItemStack stack, Level level, Player jogador, EstadoRevolver e, long dt) {
-        if (dt == Tempos.tick(Tempos.REC_MEIO_ARMADO)) som(level, jogador, Registros.SOM_TAMBOR_GIRA.get(), 0.6f, 0.8f);
-        if (dt == Tempos.tick(Tempos.REC_ABRE)) som(level, jogador, Registros.SOM_PORTINHOLA.get(), 0.7f, 1.0f);
+        if (dt == Tempos.tick(Tempos.REC_MEIO_ARMADO)) som(level, jogador, Registros.SOM_TAMBOR_GIRA.get(), 1.0f, 0.8f);
+        if (dt == Tempos.tick(Tempos.REC_ABRE)) som(level, jogador, Registros.SOM_PORTINHOLA.get(), 1.0f, 1.0f);
         for (int bloco = 0; bloco < 6; bloco++) {
             int inicio = Tempos.REC_T0 + bloco * Tempos.REC_BLOCO;
             int camara = Tambor.camaraDoEncaixe(Tambor.encaixeDoBloco(bloco), e.posicao());
@@ -120,17 +120,17 @@ public class RevolverItem extends Item {
             boolean recebe = Tambor.estado(e.camaras(), camara) == Tambor.CARREGADA
                     || (e.carregar() & (1 << camara)) != 0;
             if (tinha && dt == Tempos.tick(inicio + Tempos.BLOCO_ESTOJO_SOME)) {
-                som(level, jogador, Registros.SOM_ESTOJO_CAI.get(), 0.6f, 1.0f);
+                som(level, jogador, Registros.SOM_ESTOJO_CAI.get(), 1.0f, 1.0f);
             }
             if (recebe && dt == Tempos.tick(inicio + Tempos.BLOCO_BALA_ENTRA)) {
-                som(level, jogador, Registros.SOM_BALA_ENTRA.get(), 0.7f, 1.0f);
+                som(level, jogador, Registros.SOM_BALA_ENTRA.get(), 1.0f, 1.0f);
             }
             if (dt == Tempos.tick(inicio + Tempos.BLOCO_GIRA)) {
-                som(level, jogador, Registros.SOM_TAMBOR_GIRA.get(), 0.5f, 1.0f);
+                som(level, jogador, Registros.SOM_TAMBOR_GIRA.get(), 1.0f, 1.0f);
             }
         }
-        if (dt == Tempos.tick(Tempos.REC_FECHA)) som(level, jogador, Registros.SOM_PORTINHOLA.get(), 0.7f, 0.9f);
-        if (dt == Tempos.tick(Tempos.REC_ENGATILHA)) som(level, jogador, Registros.SOM_ENGATILHAR.get(), 0.7f, 1.0f);
+        if (dt == Tempos.tick(Tempos.REC_FECHA)) som(level, jogador, Registros.SOM_PORTINHOLA.get(), 1.0f, 0.9f);
+        if (dt == Tempos.tick(Tempos.REC_ENGATILHA)) som(level, jogador, Registros.SOM_ENGATILHAR.get(), 1.0f, 1.0f);
         if (dt >= Tempos.tickFimRecarga()) {
             stack.set(Registros.ESTADO.get(), e.parado(Tambor.depoisDaRecarga(e.camaras(), e.carregar()), e.posicao()));
         }
