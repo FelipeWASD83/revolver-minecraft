@@ -8,7 +8,10 @@ portinhola     550 triângulos  (portinhola)
 botao          192 triângulos  (botao_ejetor)
 clarao          90 triângulos  (clarao)
 estojo         576 triângulos  (estojo_0)
-bala           400 triângulos  (bala_0)
+bala_comum     400 triângulos  (bala_0)
+bala_aco       400 triângulos  (bala_0)
+bala_diamante    400 triângulos  (bala_0)
+bala_netherite    400 triângulos  (bala_0)
 
 tiro: 50 quadros, peças que mexem: corpo, cao, gatilho, tambor, portinhola, botao, clarao, estojo0, bala0, estojo1, bala1, estojo2, bala2, estojo3, bala3, estojo4, bala4, estojo5, bala5
 recarregar: 340 quadros, peças que mexem: cao, tambor, portinhola, botao, estojo0, bala0, estojo1, bala1, estojo2, bala2, estojo3, bala3, estojo4, bala4, estojo5, bala5

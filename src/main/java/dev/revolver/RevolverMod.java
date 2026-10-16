@@ -22,7 +22,7 @@ public final class RevolverMod {
     private static void abaCriativo(BuildCreativeModeTabContentsEvent evento) {
         if (evento.getTabKey() == CreativeModeTabs.COMBAT) {
             evento.accept(Registros.REVOLVER.get());
-            evento.accept(Registros.CARTUCHO.get());
+            for (var cartucho : Registros.CARTUCHOS.values()) evento.accept(cartucho.get());
         }
     }
 

@@ -3,6 +3,7 @@ package dev.revolver;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dev.revolver.logica.TipoBala;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ class RecursosTest {
     static final Path DATA = Path.of("src/main/resources/data/revolver");
     // o mesmo que dev.revolver.cliente.RevolverCliente.PECAS (essa classe é só do cliente)
     static final List<String> PECAS = List.of("corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao",
-            "estojo", "bala");
+            "estojo", "bala_comum", "bala_aco", "bala_diamante", "bala_netherite");
 
     static JsonObject json(Path p) throws IOException {
         return JsonParser.parseString(Files.readString(p, StandardCharsets.UTF_8)).getAsJsonObject();
@@ -68,9 +69,12 @@ class RecursosTest {
         for (String ctx : List.of("firstperson_righthand", "thirdperson_righthand", "gui", "ground", "fixed")) {
             assertTrue(revolver.getAsJsonObject("display").has(ctx), ctx);
         }
-        JsonObject cartucho = json(ASSETS.resolve("models/item/cartucho_45.json"));
-        assertEquals("revolver:item/cartucho_45", cartucho.getAsJsonObject("textures").get("layer0").getAsString());
-        assertTrue(Files.exists(ASSETS.resolve("textures/item/cartucho_45.png")));
+        for (TipoBala tipo : TipoBala.values()) {
+            JsonObject cartucho = json(ASSETS.resolve("models/item/" + tipo.item + ".json"));
+            assertEquals("revolver:item/" + tipo.item, cartucho.getAsJsonObject("textures").get("layer0").getAsString());
+            assertTrue(Files.exists(ASSETS.resolve("textures/item/" + tipo.item + ".png")), tipo.item);
+            assertTrue(PECAS.contains(tipo.modelo), tipo.modelo);
+        }
     }
 
     @Test
@@ -98,15 +102,17 @@ class RecursosTest {
         for (Map.Entry<String, JsonElement> e : sons.entrySet()) {
             assertTrue(pt.has(e.getValue().getAsJsonObject().get("subtitle").getAsString()), e.getKey());
         }
-        for (String chave : List.of("item.revolver.revolver", "item.revolver.cartucho_45", "key.revolver.recarregar",
-                "key.categories.revolver", "item.revolver.revolver.balas")) {
+        for (String chave : List.of("item.revolver.revolver", "key.revolver.recarregar", "key.categories.revolver",
+                "item.revolver.revolver.balas", "item.revolver.revolver.tipo", "item.revolver.cartucho.dano")) {
             assertTrue(pt.has(chave), chave);
         }
+        for (TipoBala tipo : TipoBala.values()) assertTrue(pt.has("item.revolver." + tipo.item), tipo.item);
     }
 
     @Test
     void receitasSeLeem() throws IOException {
-        for (String r : List.of("revolver", "cartucho_45")) {
+        for (String r : List.of("revolver", "cartucho_45", "cartucho_45_aco", "cartucho_45_diamante",
+                "cartucho_45_netherite")) {
             JsonObject receita = json(DATA.resolve("recipe/" + r + ".json"));
             assertEquals("minecraft:crafting_shaped", receita.get("type").getAsString());
             assertEquals("revolver:" + r, receita.getAsJsonObject("result").get("id").getAsString());

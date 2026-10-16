@@ -12,10 +12,22 @@ vazio sai empurrado pela haste e entra uma bala nova.
 - **Recarregar:** tecla **R** (dá para trocar em Opções > Controles > Revólver). Leva uns 11 segundos e
   carrega uma bala por cartucho que você tiver; sem cartucho, só tira os estojos vazios. No modo criativo
   não gasta cartucho.
-- **Dano:** 10 corações (20 pontos), até 64 blocos.
-- O texto do item mostra quantas balas tem no tambor.
+- **Qual bala entra:** como as flechas no arco, primeiro os cartuchos da outra mão, depois na ordem da
+  barra e do inventário. Se uma pilha acabar no meio, o tambor fica misturado, e cada tiro usa o dano da
+  bala daquela câmara.
+- **Alcance:** 64 blocos.
+- O texto do revólver mostra quantas balas tem e de que tipo; o do cartucho mostra o dano.
 
-Os dois itens ficam na aba **Combate** do criativo.
+## Balas
+
+| Cartucho | Dano | Ponta |
+|---|---|---|
+| Cartucho .45 | 20 (10 corações) | chumbo |
+| Cartucho .45 de aço | 50 | aço |
+| Cartucho .45 de diamante | 100 | diamante |
+| Cartucho .45 de netherite | 200 | netherite (não queima na lava) |
+
+O revólver e os quatro cartuchos ficam na aba **Combate** do criativo.
 
 ## Receitas
 
@@ -23,6 +35,9 @@ Os dois itens ficam na aba **Combate** do criativo.
 |---|---|
 | Revólver | três barras de ferro na linha de cima; no meio, um gancho de armadilha e uma tábua; embaixo à direita, outra tábua |
 | 6 cartuchos .45 | pepita de ferro em cima, pólvora no meio, barra de cobre embaixo (em coluna) |
+| 8 cartuchos de aço | 8 cartuchos .45 em volta de 1 barra de ferro |
+| 8 cartuchos de diamante | 8 cartuchos de aço em volta de 1 diamante |
+| 8 cartuchos de netherite | 8 cartuchos de diamante em volta de 1 barra de netherite |
 
 ## Como instalar
 
@@ -30,7 +45,7 @@ Já existe uma instância só com este mod no Prism: **"Revólver (teste do mod)
 NeoForge 21.1.251, a mesma base da "Horizonte Infinito", com as suas opções de vídeo e controles). É só
 abrir o Prism e jogar nela.
 
-Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-1.0.1.jar`) para a
+Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-1.1.0.jar`) para a
 pasta `mods` dela. Para gerar o jar: `.\gradlew.bat build` nesta pasta. Depois de gerar de novo, copie o
 jar de novo para a instância (o arquivo lá não se atualiza sozinho).
 
@@ -40,8 +55,9 @@ jar de novo para a instância (o arquivo lá não se atualiza sozinho).
   números da linha `firstperson_righthand` (primeira pessoa) ou `thirdperson_righthand` (terceira):
   `"escala"` é o tamanho e `"palma"` é onde o cabo cai (esquerda/direita, cima/baixo, perto/longe). Depois
   rode o exportador e o `gradlew build` (comandos no `CLAUDE.md`).
-- **Dano e alcance:** no `src\main\java\dev\revolver\RevolverItem.java`, procure `ALCANCE = 64.0` e
-  `DANO = 20.0f`.
+- **Dano de cada bala:** no `src\main\java\dev\revolver\logica\TipoBala.java`, o número com `f` no fim
+  de cada linha (`COMUM(... 20f)`, `NETHERITE(... 200f)`). **Alcance:** no `RevolverItem.java`, procure
+  `ALCANCE = 64.0`.
 - **Sons:** o tiro e a bala entrando saem dos arquivos em `ferramentas\sons-baixados` (`tiro.mp3` e o
   primeiro som do `uzi-reload.mp3`). Para trocar, ponha outro arquivo lá com o mesmo nome e rode
   `.venv\Scripts\python.exe ferramentas\gerar_sons.py`. Esses arquivos ficam fora do GitHub; os sons

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0 (16/10/2026)
+
+### Novo
+- Três cartuchos novos, cada um com seu dano: aço (50), diamante (100) e netherite (200); o cartucho
+  .45 de antes continua dando 20. Cada um sai de 8 do anterior em volta de ferro, diamante ou netherite.
+- A ponta da bala aparece na cor do tipo, no tambor e na recarga, e cada cartucho tem ícone próprio.
+- A recarga pega primeiro os cartuchos da outra mão, como o arco faz com as flechas.
+- O revólver mostra quantas balas de cada tipo tem; o cartucho mostra o dano.
+
+### Corrigido
+- O ícone do cartucho saía quadriculado.
+
 ## 1.0.1 (16/10/2026)
 
 ### Corrigido

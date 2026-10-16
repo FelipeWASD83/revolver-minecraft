@@ -1,5 +1,6 @@
 package dev.revolver;
 
+import dev.revolver.logica.TipoBala;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +10,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /** Itens, o componente de estado do revólver e os sons. */
 public final class Registros {
@@ -23,8 +27,21 @@ public final class Registros {
 
     public static final DeferredItem<RevolverItem> REVOLVER =
             ITENS.register("revolver", () -> new RevolverItem(new Item.Properties().stacksTo(1)));
-    public static final DeferredItem<Item> CARTUCHO =
-            ITENS.registerSimpleItem("cartucho_45", new Item.Properties().stacksTo(64));
+    /** Um cartucho por tipo, na ordem do {@link TipoBala}; o comum continua com o nome da 1.0 ("cartucho_45"). */
+    public static final Map<TipoBala, DeferredItem<CartuchoItem>> CARTUCHOS = new EnumMap<>(TipoBala.class);
+
+    static {
+        for (TipoBala tipo : TipoBala.values()) {
+            Item.Properties p = new Item.Properties().stacksTo(64);
+            if (tipo == TipoBala.NETHERITE) p = p.fireResistant();
+            Item.Properties final_ = p;
+            CARTUCHOS.put(tipo, ITENS.register(tipo.item, () -> new CartuchoItem(tipo, final_)));
+        }
+    }
+
+    public static CartuchoItem cartucho(TipoBala tipo) {
+        return CARTUCHOS.get(tipo).get();
+    }
 
     public static final DeferredHolder<SoundEvent, SoundEvent> SOM_TIRO = som("tiro");
     public static final DeferredHolder<SoundEvent, SoundEvent> SOM_ENGATILHAR = som("engatilhar");

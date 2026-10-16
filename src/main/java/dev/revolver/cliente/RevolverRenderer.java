@@ -7,6 +7,7 @@ import dev.revolver.RevolverItem;
 import dev.revolver.logica.Animacao;
 import dev.revolver.logica.Tambor;
 import dev.revolver.logica.Tempos;
+import dev.revolver.logica.TipoBala;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
@@ -62,10 +63,15 @@ public class RevolverRenderer extends BlockEntityWithoutLevelRenderer {
             if (v == Tambor.Visual.NADA) continue;
             float[] estojo = ajustar(anim.matriz(nome, "estojo" + j, indice), corpo, seco);
             desenhar(mc, "estojo", estojo, stack, pose, vc, luz, sobreposicao);
+            // a ponta tem a cor do tipo: a bala que estava na câmara, ou a nova que entra na recarga
+            int c = Tambor.camaraDoEncaixe(j, e.posicao());
+            boolean nova = e.acao() == EstadoRevolver.RECARGA && (e.carregar() & (1 << c)) != 0
+                    && v == Tambor.Visual.ESTOJO_E_BALA;
+            String bala = TipoBala.de(Tambor.tipo(nova ? e.tiposNovos() : e.tipos(), c)).modelo;
             if (v == Tambor.Visual.ESTOJO_E_BALA_JUNTOS) {
-                desenhar(mc, "bala", estojo, stack, pose, vc, luz, sobreposicao);
+                desenhar(mc, bala, estojo, stack, pose, vc, luz, sobreposicao);
             } else if (v == Tambor.Visual.ESTOJO_E_BALA) {
-                desenhar(mc, "bala", ajustar(anim.matriz(nome, "bala" + j, indice), corpo, seco), stack, pose, vc,
+                desenhar(mc, bala, ajustar(anim.matriz(nome, "bala" + j, indice), corpo, seco), stack, pose, vc,
                         luz, sobreposicao);
             }
         }

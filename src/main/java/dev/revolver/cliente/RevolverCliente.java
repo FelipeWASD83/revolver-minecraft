@@ -30,7 +30,8 @@ import java.io.Reader;
 /** Só no cliente: a tecla de recarregar, os modelos das peças, a animação e o renderizador do item. */
 public final class RevolverCliente {
     private static final Logger LOG = LogUtils.getLogger();
-    public static final String[] PECAS = {"corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao", "estojo", "bala"};
+    public static final String[] PECAS = {"corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao", "estojo",
+            "bala_comum", "bala_aco", "bala_diamante", "bala_netherite"};
     public static final KeyMapping TECLA_RECARREGAR = new KeyMapping("key.revolver.recarregar",
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.revolver");
     private static Animacao animacao;

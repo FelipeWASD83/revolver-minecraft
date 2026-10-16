@@ -1,6 +1,7 @@
 package dev.revolver;
 
 import dev.revolver.logica.Tambor;
+import dev.revolver.logica.TipoBala;
 import dev.revolver.logica.Tempos;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -27,6 +28,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ import java.util.List;
  */
 public class RevolverItem extends Item {
     public static final double ALCANCE = 64.0;
-    public static final float DANO = 20.0f;     // 10 corações (pedido dele: a espada de netherite dá 8)
+    // o dano vem da bala que está na câmara (TipoBala): 20 no cartucho comum, 200 no de netherite
 
     public RevolverItem(Properties propriedades) {
         super(propriedades);
@@ -55,7 +57,7 @@ public class RevolverItem extends Item {
             int camara = Tambor.camaraDoDisparo(e.posicao());
             boolean temBala = Tambor.estado(e.camaras(), camara) == Tambor.CARREGADA;
             stack.set(Registros.ESTADO.get(),
-                    e.comecar(temBala ? EstadoRevolver.TIRO : EstadoRevolver.TIRO_SECO, level.getGameTime(), 0));
+                    e.comecarTiro(temBala ? EstadoRevolver.TIRO : EstadoRevolver.TIRO_SECO, level.getGameTime()));
         }
         return InteractionResultHolder.consume(stack);
     }
@@ -67,14 +69,33 @@ public class RevolverItem extends Item {
         EstadoRevolver e = estado(stack);
         if (e.acao() != EstadoRevolver.PARADO) return;
         boolean criativo = jogador.getAbilities().instabuild;
-        int disponiveis = criativo ? 6 : jogador.getInventory().countItem(Registros.CARTUCHO.get());
-        int carregar = Tambor.planejarRecarga(e.camaras(), e.posicao(), disponiveis);
-        if (carregar == 0 && !Tambor.temDeflagrada(e.camaras())) return;
-        if (!criativo && carregar != 0) {
-            jogador.getInventory().clearOrCountMatchingItems(s -> s.is(Registros.CARTUCHO.get()),
-                    Integer.bitCount(carregar), jogador.inventoryMenu.getCraftSlots());
+        // os cartuchos saem como as flechas do arco: primeiro os da outra mão, depois na ordem do inventário
+        List<ItemStack> pilhas = new ArrayList<>();
+        pilhas.add(jogador.getOffhandItem());
+        pilhas.addAll(jogador.getInventory().items);
+        int precisa = Tambor.semBala(e.camaras());
+        List<Integer> fila = new ArrayList<>();
+        for (ItemStack pilha : pilhas) {
+            if (!(pilha.getItem() instanceof CartuchoItem cartucho)) continue;
+            for (int k = 0; k < pilha.getCount() && fila.size() < precisa; k++) fila.add(cartucho.tipo.ordinal());
         }
-        stack.set(Registros.ESTADO.get(), e.comecar(EstadoRevolver.RECARGA, jogador.level().getGameTime(), carregar));
+        if (criativo) {
+            while (fila.size() < precisa) fila.add(TipoBala.COMUM.ordinal());   // no criativo nunca falta
+        }
+        Tambor.Plano plano = Tambor.planejar(e.camaras(), e.posicao(), fila.stream().mapToInt(Integer::intValue).toArray());
+        if (plano.carregar() == 0 && !Tambor.temDeflagrada(e.camaras())) return;
+        if (!criativo) {
+            int gastar = Integer.bitCount(plano.carregar());
+            for (ItemStack pilha : pilhas) {
+                if (gastar == 0) break;
+                if (!(pilha.getItem() instanceof CartuchoItem)) continue;
+                int tira = Math.min(gastar, pilha.getCount());
+                pilha.shrink(tira);
+                gastar -= tira;
+            }
+        }
+        stack.set(Registros.ESTADO.get(),
+                e.comecarRecarga(jogador.level().getGameTime(), plano.carregar(), plano.tipos()));
     }
 
     @Override
@@ -97,16 +118,17 @@ public class RevolverItem extends Item {
         if (dt == Tempos.tick(Tempos.TIRO_DISPARO)) {
             if (e.acao() == EstadoRevolver.TIRO) {
                 int camara = Tambor.camaraDoDisparo(e.posicao());
+                TipoBala bala = TipoBala.de(Tambor.tipo(e.tipos(), camara));
                 stack.set(Registros.ESTADO.get(), e.comCamaras(Tambor.com(e.camaras(), camara, Tambor.DEFLAGRADA)));
                 som(level, jogador, Registros.SOM_TIRO.get(), 4.0f, 0.95f + level.random.nextFloat() * 0.1f);
-                atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack);
+                atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack, bala.dano);
             } else {
                 som(level, jogador, Registros.SOM_CLIQUE_SECO.get(), 1.0f, 1.0f);
             }
         }
         if (dt >= Tempos.tickFimTiro()) {
             EstadoRevolver agora = estado(stack);
-            stack.set(Registros.ESTADO.get(), agora.parado(agora.camaras(), agora.posicao() + 1));
+            stack.set(Registros.ESTADO.get(), agora.parado(agora.camaras(), agora.posicao() + 1, agora.tipos()));
         }
     }
 
@@ -132,7 +154,8 @@ public class RevolverItem extends Item {
         if (dt == Tempos.tick(Tempos.REC_FECHA)) som(level, jogador, Registros.SOM_PORTINHOLA.get(), 1.0f, 0.9f);
         if (dt == Tempos.tick(Tempos.REC_ENGATILHA)) som(level, jogador, Registros.SOM_ENGATILHAR.get(), 1.0f, 1.0f);
         if (dt >= Tempos.tickFimRecarga()) {
-            stack.set(Registros.ESTADO.get(), e.parado(Tambor.depoisDaRecarga(e.camaras(), e.carregar()), e.posicao()));
+            stack.set(Registros.ESTADO.get(), e.parado(Tambor.depoisDaRecarga(e.camaras(), e.carregar()), e.posicao(),
+                    Tambor.tiposDepoisDaRecarga(e.camaras(), e.tipos(), e.carregar(), e.tiposNovos())));
         }
     }
 
@@ -141,7 +164,7 @@ public class RevolverItem extends Item {
     }
 
     /** O tiro: um raio do olho até 64 blocos; acerta a primeira criatura ou o primeiro bloco no caminho. */
-    private static void atirar(ServerLevel level, Player jogador, boolean outraMao) {
+    private static void atirar(ServerLevel level, Player jogador, boolean outraMao, float dano) {
         Vec3 olho = jogador.getEyePosition();
         Vec3 dir = jogador.getLookAngle();
         Vec3 fim = olho.add(dir.scale(ALCANCE));
@@ -160,7 +183,7 @@ public class RevolverItem extends Item {
 
         if (alvo != null) {
             Entity atingido = alvo.getEntity();
-            atingido.hurt(level.damageSources().playerAttack(jogador), DANO);
+            atingido.hurt(level.damageSources().playerAttack(jogador), dano);
             if (atingido instanceof LivingEntity vivo) vivo.knockback(0.3, -dir.x, -dir.z);
             Vec3 p = alvo.getLocation();
             level.sendParticles(ParticleTypes.CRIT, p.x, p.y, p.z, 10, 0.1, 0.1, 0.1, 0.2);
@@ -182,7 +205,20 @@ public class RevolverItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext contexto, List<Component> linhas, TooltipFlag flag) {
-        int balas = Tambor.carregadas(estado(stack).camaras());
-        linhas.add(Component.translatable("item.revolver.revolver.balas", balas).withStyle(ChatFormatting.GRAY));
+        EstadoRevolver e = estado(stack);
+        linhas.add(Component.translatable("item.revolver.revolver.balas", Tambor.carregadas(e.camaras()))
+                .withStyle(ChatFormatting.GRAY));
+        TipoBala[] tipos = TipoBala.values();
+        for (int i = tipos.length - 1; i >= 0; i--) {     // quantas de cada tipo, da melhor para a pior
+            TipoBala t = tipos[i];
+            int n = 0;
+            for (int c = 0; c < 6; c++) {
+                if (Tambor.estado(e.camaras(), c) == Tambor.CARREGADA && Tambor.tipo(e.tipos(), c) == t.ordinal()) n++;
+            }
+            if (n > 0) {
+                linhas.add(Component.translatable("item.revolver.revolver.tipo", n,
+                        Component.translatable("item.revolver." + t.item), (int) t.dano).withStyle(ChatFormatting.DARK_GRAY));
+            }
+        }
     }
 }

@@ -55,6 +55,14 @@ MATERIAIS = {
     "clarao": ("branco", (1.0, 0.86, 0.48)),
 }
 
+# Os tipos de bala (mesma ordem e nomes do TipoBala.java): cor da ponta no modelo e no ícone (escura, clara)
+TIPOS = [
+    ("comum", "cartucho_45", (0.56, 0.56, 0.59), (0.45, 0.46, 0.50), (0.70, 0.71, 0.75)),
+    ("aco", "cartucho_45_aco", (0.82, 0.84, 0.88), (0.66, 0.68, 0.73), (0.93, 0.94, 0.96)),
+    ("diamante", "cartucho_45_diamante", (0.38, 0.90, 0.86), (0.20, 0.70, 0.68), (0.60, 0.97, 0.94)),
+    ("netherite", "cartucho_45_netherite", (0.32, 0.27, 0.29), (0.22, 0.18, 0.20), (0.45, 0.40, 0.42)),
+]
+
 # Como o item aparece em cada lugar: giro (graus, XYZ como no JSON do Minecraft), escala e onde o centro da
 # pegada deve cair (em blocos, no espaço da mão). A translação do JSON sai daqui. Ajuste fino depois de ver no
 # jogo: é só mudar estes números e rodar de novo.
@@ -100,7 +108,7 @@ def malha_no_item(ob, A, bm_destino, materiais_usados):
     ev.to_mesh_clear()
 
 
-def escrever_obj(nome, bm, materiais, emissivo=False):
+def escrever_obj(nome, bm, materiais, emissivo=False, cores=None):
     """OBJ com normais lisas por canto (as quinas vivas continuam vivas) e .mtl com a cor e a textura."""
     me = bpy.data.meshes.new(nome)
     bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4])
@@ -173,6 +181,8 @@ def escrever_obj(nome, bm, materiais, emissivo=False):
     mtl = []
     for m in materiais:
         textura, cor = MATERIAIS.get(m, ("branco", (0.7, 0.7, 0.7)))
+        if cores and m in cores:
+            cor = cores[m]
         mtl += [f"newmtl {m}", "Kd %.4f %.4f %.4f 1.0" % cor,
                 "Ka 1.0 1.0 1.0" if (emissivo and m == "clarao") else "Ka 0.0 0.0 0.0",
                 f"map_Kd #{textura}", ""]
@@ -219,38 +229,53 @@ def exibicao(A):
     return saida
 
 
-def icone_cartucho():
-    """Ícone 16x16 do cartucho: estojo de latão na diagonal, ponta de chumbo, aro e contorno."""
+def icone_cartucho(nome, ponta_escura, ponta_clara):
+    """Ícone 16x16 do cartucho, deitado na diagonal com a ponta para cima e à direita (como as ferramentas do
+    jogo): aro escuro embaixo, estojo de latão com um lado claro e outro escuro, ponta arredondada na cor do tipo e
+    contorno escuro. Cada pixel é decidido pela distância ao eixo, então o corpo sai cheio."""
     n = 16
     px = [[(0, 0, 0, 0) for _ in range(n)] for _ in range(n)]
-    latao, latao_esc, latao_cla = (0.86, 0.66, 0.30, 1), (0.55, 0.38, 0.14, 1), (0.98, 0.86, 0.55, 1)
-    chumbo, chumbo_cla = (0.45, 0.46, 0.50, 1), (0.70, 0.71, 0.75, 1)
-    contorno = (0.18, 0.12, 0.06, 1)
-    for i in range(3, 14):          # eixo na diagonal, de (3,3) a (13,13); o topo é a ponta
-        for d in (-1, 0, 1):
-            x, y = i + d, i - d
-            if 0 <= x < n and 0 <= y < n:
-                cor = latao if d == 0 else (latao_cla if d == -1 else latao_esc)
-                if i >= 11:
-                    cor = chumbo_cla if d == -1 else chumbo
-                px[y][x] = cor
-    for x, y in [(2, 4), (4, 2), (3, 3), (2, 3), (3, 2)]:   # aro
-        px[y][x] = latao_esc
-    for x, y in [(14, 14), (13, 14), (14, 13)]:            # ponta arredondada
-        px[y][x] = chumbo
+    latao, latao_esc, latao_cla = (0.86, 0.66, 0.30, 1), (0.56, 0.39, 0.15, 1), (0.98, 0.86, 0.55, 1)
+    aro = (0.66, 0.47, 0.18, 1)
+    ponta, ponta_cla = (*ponta_escura, 1), (*ponta_clara, 1)
+    contorno = (0.16, 0.11, 0.06, 1)
+    a = (3.2, 12.8)                      # base (aro), embaixo à esquerda; y cresce para baixo
+    b = (12.8, 3.2)                      # ponta, em cima à direita
+    ex, ey = b[0] - a[0], b[1] - a[1]
+    comp = (ex * ex + ey * ey) ** 0.5
+    ux, uy = ex / comp, ey / comp
+    for y in range(n):
+        for x in range(n):
+            cx, cy = x + 0.5 - a[0], y + 0.5 - a[1]
+            t = (cx * ux + cy * uy) / comp           # 0 no aro, 1 na ponta
+            d = cx * uy - cy * ux                    # distância ao eixo (o sinal diz o lado)
+            if t < 0 or t > 1:
+                continue
+            largura = 2.1 if t < 0.1 else 1.6        # o aro é um pouco mais largo
+            if t > 0.86:                             # ponta arredondada
+                largura *= max(0.0, 1 - ((t - 0.86) / 0.14) ** 2) ** 0.5
+            if abs(d) > largura:
+                continue
+            if t < 0.1:
+                cor = aro
+            elif t < 0.64:
+                cor = latao_cla if d < -0.55 else (latao_esc if d > 0.55 else latao)
+            else:
+                cor = ponta_cla if d < -0.3 else ponta
+            px[y][x] = cor
     for y in range(n):                                      # contorno escuro em volta do que tem cor
         for x in range(n):
             if px[y][x][3] == 0 and any(0 <= x + dx < n and 0 <= y + dy < n and px[y + dy][x + dx][3] == 1
                                         and px[y + dy][x + dx] != contorno
                                         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                 px[y][x] = contorno
-    img = bpy.data.images.new("cartucho_45", n, n, alpha=True)
+    img = bpy.data.images.new(nome, n, n, alpha=True)
     plano = []
     for y in range(n - 1, -1, -1):  # imagem do Blender começa embaixo
         for x in range(n):
             plano += list(px[y][x])
     img.pixels = plano
-    img.filepath_raw = str(TEXTURAS / "cartucho_45.png")
+    img.filepath_raw = str(TEXTURAS / f"{nome}.png")
     img.file_format = 'PNG'
     img.save()
 
@@ -301,12 +326,18 @@ def principal():
     bpy.context.view_layer.update()
     rep_clarao = clarao.matrix_world.copy()
     for nome, fonte in [("cao", "cao"), ("gatilho", "gatilho"), ("tambor", "tambor"), ("portinhola", "portinhola"),
-                        ("botao", "botao_ejetor"), ("clarao", "clarao"), ("estojo", "estojo_0"),
-                        ("bala", "bala_0")]:
+                        ("botao", "botao_ejetor"), ("clarao", "clarao"), ("estojo", "estojo_0")]:
         bm = bmesh.new()
         usados = []
         malha_no_item(bpy.data.objects[fonte], A, bm, usados)
         relatorio.append((nome, escrever_obj(nome, bm, usados, emissivo=(nome == "clarao")), fonte))
+    # a mesma bala uma vez por tipo, só muda a cor do chumbo
+    for tipo, _, ponta, _, _ in TIPOS:
+        bm = bmesh.new()
+        usados = []
+        malha_no_item(bpy.data.objects["bala_0"], A, bm, usados)
+        relatorio.append((f"bala_{tipo}", escrever_obj(f"bala_{tipo}", bm, usados, cores={"chumbo": ponta}),
+                          "bala_0"))
     clarao.scale = escala_clarao
     bpy.context.view_layer.update()
 
@@ -367,13 +398,15 @@ def principal():
     for nome in ("madeira", "tempera"):
         shutil.copyfile(ORIGEM / "modelo" / f"{nome}.png", TEXTURAS / "revolver" / f"{nome}.png")
     textura_branca()
-    icone_cartucho()
+    for _, item_nome, _, escura, clara in TIPOS:
+        icone_cartucho(item_nome, escura, clara)
     item = {"parent": "builtin/entity", "gui_light": "front",
             "textures": {"particle": "revolver:item/revolver/madeira"}, "display": exibicao(A)}
     (ASSETS / "models" / "item" / "revolver.json").write_text(json.dumps(item, indent=2) + "\n", encoding="utf-8")
-    cartucho = {"parent": "minecraft:item/generated", "textures": {"layer0": "revolver:item/cartucho_45"}}
-    (ASSETS / "models" / "item" / "cartucho_45.json").write_text(json.dumps(cartucho, indent=2) + "\n",
-                                                                 encoding="utf-8")
+    for _, item_nome, _, _, _ in TIPOS:
+        cartucho = {"parent": "minecraft:item/generated", "textures": {"layer0": f"revolver:item/{item_nome}"}}
+        (ASSETS / "models" / "item" / f"{item_nome}.json").write_text(json.dumps(cartucho, indent=2) + "\n",
+                                                                      encoding="utf-8")
 
     # ---- conferência: peça exportada (repouso) + matriz do quadro tem que cair onde o Blender põe a peça
     cena.frame_set(0)

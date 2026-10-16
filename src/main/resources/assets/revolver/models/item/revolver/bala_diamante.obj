@@ -1,5 +1,5 @@
-# bala: gerado por ferramentas/exportar_modelo.py a partir do revolver-3d
-mtllib bala.mtl
+# bala_diamante: gerado por ferramentas/exportar_modelo.py a partir do revolver-3d
+mtllib bala_diamante.mtl
 v 0.451086 0.662664 0.500000
 v 0.451086 0.662664 0.477600
 v 0.451086 0.666168 0.477876

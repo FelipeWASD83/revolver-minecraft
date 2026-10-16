@@ -58,8 +58,15 @@ quando ele pedir.
   da portinhola (1, 0, 5, 4, 3, 2), gasta um cartucho por câmara sem bala e, sem cartucho, só tira os
   estojos vazios. No criativo não gasta.
 - **O tiro sai no quadro em que o cão cai** (tick 14 depois do clique), como na animação: é um revólver
-  de ação simples, o polegar arma antes. Raio no servidor até 64 blocos, **dano 20** (pedido dele na
-  1.0.1: 9 era pouco perto dos 8 da espada de netherite).
+  de ação simples, o polegar arma antes. Raio no servidor até 64 blocos; **o dano é o da bala da câmara**.
+- **Tipos de bala (1.1.0, pedido dele: "a mais básica dá 20, a melhor 200")**: `logica/TipoBala` com
+  comum 20, aço 50, diamante 100 e netherite 200 (o de netherite não queima). **A ordem do enum é o número
+  guardado em cada câmara: não reordenar; tipo novo entra no fim** (só cabem 4 em 2 bits; o quinto pede
+  ampliar o campo). O estado ganhou `tipos` e `tipos_novos` como campos **opcionais**: revólver salvo na
+  1.0.x lê tudo como comum (há teste). A recarga pega os cartuchos como o arco pega flecha (outra mão,
+  depois a ordem do inventário) e pode misturar tipos. O cartucho comum mantém o nome `cartucho_45` da 1.0.
+  Cada tipo tem um modelo de bala (`bala_<tipo>`, a mesma malha com a ponta na cor dele) e um ícone; a
+  tabela `TIPOS` do exportador tem as cores e precisa casar com o `TipoBala`.
 - **Sons** (`ferramentas/gerar_sons.py`, OGG Vorbis pelo PyAV 17.0.1, versão que passa pelo Smart App
   Control; o mixdown de áudio do Blender sem janela grava só o começo do som: não usar). **O tiro e a
   bala entrando são os arquivos que ele baixou** (`ferramentas/sons-baixados/`, fora do git porque a

@@ -10,5 +10,10 @@
   "subtitles.revolver.portinhola": "Loading gate",
   "subtitles.revolver.estojo_cai": "Casing drops",
   "subtitles.revolver.bala_entra": "Round loads",
-  "subtitles.revolver.tambor_gira": "Cylinder turns"
+  "subtitles.revolver.tambor_gira": "Cylinder turns",
+  "item.revolver.cartucho_45_aco": ".45 Steel Cartridge",
+  "item.revolver.cartucho_45_diamante": ".45 Diamond Cartridge",
+  "item.revolver.cartucho_45_netherite": ".45 Netherite Cartridge",
+  "item.revolver.cartucho.dano": "Damage: %s",
+  "item.revolver.revolver.tipo": "%s × %s (damage %s)"
 }

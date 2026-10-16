@@ -10,5 +10,10 @@
   "subtitles.revolver.portinhola": "Portinhola do revólver",
   "subtitles.revolver.estojo_cai": "Estojo cai",
   "subtitles.revolver.bala_entra": "Bala entra no tambor",
-  "subtitles.revolver.tambor_gira": "Tambor gira"
+  "subtitles.revolver.tambor_gira": "Tambor gira",
+  "item.revolver.cartucho_45_aco": "Cartucho .45 de aço",
+  "item.revolver.cartucho_45_diamante": "Cartucho .45 de diamante",
+  "item.revolver.cartucho_45_netherite": "Cartucho .45 de netherite",
+  "item.revolver.cartucho.dano": "Dano: %s",
+  "item.revolver.revolver.tipo": "%s × %s (dano %s)"
 }

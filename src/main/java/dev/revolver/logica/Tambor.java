@@ -61,20 +61,55 @@ public final class Tambor {
         return false;
     }
 
+    /** Tipo de bala (número do {@link TipoBala}) guardado para a câmara: também 2 bits por câmara. */
+    public static int tipo(int tipos, int camara) {
+        return estado(tipos, camara);
+    }
+
+    public static int comTipo(int tipos, int camara, int tipo) {
+        return com(tipos, camara, tipo);
+    }
+
+    /** O que a recarga vai fazer: as câmaras que recebem bala nova (bit por câmara) e o tipo de cada uma. */
+    public record Plano(int carregar, int tipos) {}
+
     /**
-     * Quais câmaras recebem bala nova nesta recarga (bit por câmara), na ordem em que a animação passa por elas,
-     * até acabarem os cartuchos. Câmara que já tem bala não gasta cartucho.
+     * Distribui os cartuchos da fila (tipos, na ordem em que saem do inventário) pelas câmaras sem bala, na ordem em
+     * que a animação passa por elas, até a fila acabar. Câmara que já tem bala não gasta cartucho.
      */
-    public static int planejarRecarga(int camaras, int posicao, int cartuchos) {
-        int carregar = 0;
-        for (int bloco = 0; bloco < 6 && cartuchos > 0; bloco++) {
+    public static Plano planejar(int camaras, int posicao, int[] fila) {
+        int carregar = 0, tipos = 0, i = 0;
+        for (int bloco = 0; bloco < 6 && i < fila.length; bloco++) {
             int c = camaraDoEncaixe(encaixeDoBloco(bloco), posicao);
             if (estado(camaras, c) != CARREGADA) {
                 carregar |= 1 << c;
-                cartuchos--;
+                tipos = comTipo(tipos, c, fila[i++]);
             }
         }
-        return carregar;
+        return new Plano(carregar, tipos);
+    }
+
+    /** Só com cartuchos comuns. */
+    public static int planejarRecarga(int camaras, int posicao, int cartuchos) {
+        return planejar(camaras, posicao, new int[Math.max(0, Math.min(cartuchos, 6))]).carregar();
+    }
+
+    /** Quantas câmaras estão sem bala (é o máximo de cartuchos que a recarga pode gastar). */
+    public static int semBala(int camaras) {
+        return 6 - carregadas(camaras);
+    }
+
+    /** O tipo de cada câmara depois da recarga: a bala nova, a que já estava, ou nada. */
+    public static int tiposDepoisDaRecarga(int camaras, int tipos, int carregar, int tiposNovos) {
+        int novo = 0;
+        for (int c = 0; c < 6; c++) {
+            if ((carregar & (1 << c)) != 0) {
+                novo = comTipo(novo, c, tipo(tiposNovos, c));
+            } else if (estado(camaras, c) == CARREGADA) {
+                novo = comTipo(novo, c, tipo(tipos, c));
+            }
+        }
+        return novo;
     }
 
     /** Depois da recarga: o que já tinha bala continua; o planejado recebe bala; estojo vazio sai do tambor. */
