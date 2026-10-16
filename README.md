@@ -70,7 +70,7 @@ Já existe uma instância só com este mod no Prism, a **"Revólver (teste do mo
 NeoForge 21.1.251, a mesma base da "Horizonte Infinito", com as suas opções de vídeo e controles). É só
 abrir o Prism e jogar nela.
 
-Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-1.2.0.jar`) para a
+Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-1.2.1.jar`) para a
 pasta `mods` dela. Para gerar o jar: `.\gradlew.bat build` nesta pasta. Depois de gerar de novo, copie o
 jar de novo para a instância (o arquivo lá não se atualiza sozinho).
 

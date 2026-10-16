@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 (16/10/2026)
+
+### Mudou
+- A parte de cima da Desert Eagle ficou mais alta e mais grossa e afina só no topo, como a de verdade.
+
 ## 1.2.0 (16/10/2026)
 
 ### Novo
