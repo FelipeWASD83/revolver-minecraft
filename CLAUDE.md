@@ -46,8 +46,11 @@ revólver ficou igual byte a byte quando ele foi separado. Os testes (`.\gradlew
 
 **Instância de teste no Prism** (criada em 16/10/2026 a pedido dele): `%APPDATA%\PrismLauncher\instances\Revolver`, nome "Revólver (teste do mod)", só com este mod, base copiada da "Horizonte Infinito"
 (Minecraft 1.21.1, NeoForge 21.1.251, Java do Prism, 2 a 6 GB) e o `options.txt` dele. Recompilou: copiar o
-jar de `build\libs` para `minecraft\mods` de lá (e apagar o antigo se a versão mudar de nome). Nunca
-mexer na "Horizonte Infinito" nem na "fancy craft".
+jar de `build\libs` para `minecraft\mods` de lá (e apagar o antigo se a versão mudar de nome).
+
+**Também está na "Horizonte Infinito"** (o modpack dele, ~230 mods, mesma base), desde 17/10/2026, a
+pedido dele ("coloca o mod no horizonte infinito"). Versão nova do mod: trocar o jar lá também (o antigo
+sai). Fora isso, não mexer em nada dessa instância nem na "fancy craft".
 
 **Não abrir o jogo por conta própria** (`runClient` abre uma janela do Minecraft na tela dele; a regra
 vem do `feitio`, e ele joga no mesmo PC). Conferir pela prévia, pelos testes e pelo exportador; abrir só
