@@ -2,12 +2,12 @@ EXPORTAÇÃO DA ARMA escopeta PARA O MOD
 
 comprimento: 4.21 blocos
 
-corpo            22964 triângulos  (bracadeira, cano, conta, coronha, guarda_mato, pino_gatilho, pino_receptor, receptor, soleira, tampa_tubo, trava_seguranca, tubo)
-telha             8660 triângulos  (telha)
-ferrolho          1472 triângulos  (ferrolho)
-gatilho           1284 triângulos  (gatilho)
+corpo             5740 triângulos  (bracadeira, cano, conta, coronha, guarda_mato, pino_gatilho, pino_receptor, receptor, soleira, tampa_tubo, trava_seguranca, tubo)
+telha             2164 triângulos  (telha)
+ferrolho           368 triângulos  (ferrolho)
+gatilho            320 triângulos  (gatilho)
 clarao             182 triângulos  (clarao)
-estojo             736 triângulos  (estojo_ejetado)
+estojo             184 triângulos  (estojo_ejetado)
 
 tiro: 22 quadros, eventos {"disparo": 3, "bomba_atras": 12, "bomba_frente": 16}
 inserir: 14 quadros, eventos {"entra": 11}

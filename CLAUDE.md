@@ -114,6 +114,18 @@ quando ele pedir.
     as cores do jogo, média por bloco até 32 x 32 (alfa > 0,3 para o cano fino não sumir), mais contraste e cor,
     chanfro (borda de cima clara, de baixo escura), 15 tons por canal e contorno escuro;
   - há teste (ícone, textura e gui neutro).
+- **O jogo recebe uma versão leve do modelo** (2.2.0, pedido dele: "deixa eles mais low poly e diminui a
+  resolução das texturas"):
+  - o `comum.reduzir` (chamado pelo `escrever_obj`, vale para os três exportadores) reduz cada peça por colapso
+    de arestas, tentando 25 %, 35 %, 50 % e 70 % dos triângulos e ficando com a primeira que não se afasta da
+    original mais que `TOLERANCIA` (0,003 bloco = 0,75 mm) nos dois sentidos; peça pequena fica com no mínimo
+    160 triângulos;
+  - cortar a mesma fração de tudo, e juntar faces planas antes, destruía a mira da deagle e a bolinha do
+    ferrolho da sniper: não voltar a isso;
+  - texturas em `LADO_TEXTURA` (64 px), por média; os projetos `<arma>-3d` continuam com o detalhe todo;
+  - de 503 mil para 134 mil triângulos nas oito armas, jar de 8,6 MB para 3,4 MB.
+- **A descrição da arma diz o cartucho** (2.2.0): `item.revolver.arma.calibre` ("Munição: %s") com o nome do
+  cartucho comum do calibre, logo depois da linha das balas, nos três itens.
 - **Fora da regra de atualização dentro do app**: mod é carregado pelo launcher, não é app.
 
 ## Desert Eagle (1.2.0, 16/10/2026)
@@ -217,7 +229,7 @@ cada [...] cada uma deve ter a sua munição específica com o seu dano". O que 
   jogo e a arma na mão somem (`RevolverCliente`: `zoom`, `luneta`, `semMira`, `semMao`).
 - **Exportador comum** (`ferramentas/exportar_arma.py`, com o `comum.py`):
   - lê o contrato e tira as cores dos materiais do Blender, clareadas (brilho 0,24 + 1,4 v, até 0,92), e as
-    imagens dos materiais, clareadas e reduzidas a 128 px;
+    imagens dos materiais, clareadas e reduzidas a 64 px;
   - o tamanho na mão sai do `CONFIG` (`"mao"` = comprimento na tela, em blocos);
   - a terceira pessoa usa escala 0,32, um pouco maior que o tamanho real;
   - o ícone de cada cartucho tem formato próprio (o de 12 tem o corpo vermelho de plástico e a ponta na cor do

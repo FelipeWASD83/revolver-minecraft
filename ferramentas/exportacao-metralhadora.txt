@@ -2,17 +2,17 @@ EXPORTAÇÃO DA ARMA metralhadora PARA O MOD
 
 comprimento: 4.18 blocos
 
-corpo            50614 triângulos  (alca, armacao, bandeja, bipe, bloco_gas, caixa_gatilho, cano, coronha, empunhadura, encaixe, guarda_mao, guarda_mato, massa_mira, pino1, pino2, pino3, pino4, pino5, pino_gatilho, quebra_chamas, soleira, tubo_gas)
-ferrolho          1524 triângulos  (ferrolho)
-gatilho           1256 triângulos  (gatilho)
-tampa            10692 triângulos  (tampa)
-pente            12256 triângulos  (pente)
+corpo            12652 triângulos  (alca, armacao, bandeja, bipe, bloco_gas, caixa_gatilho, cano, coronha, empunhadura, encaixe, guarda_mao, guarda_mato, massa_mira, pino1, pino2, pino3, pino4, pino5, pino_gatilho, quebra_chamas, soleira, tubo_gas)
+ferrolho           380 triângulos  (ferrolho)
+gatilho            314 triângulos  (gatilho)
+tampa             2672 triângulos  (tampa)
+pente             4288 triângulos  (pente)
 clarao             106 triângulos  (clarao)
-estojo             896 triângulos  (estojo_ejetado)
-bala_comum         400 triângulos  (bala_topo)
-bala_aco           400 triângulos  (bala_topo)
-bala_diamante      400 triângulos  (bala_topo)
-bala_netherite     400 triângulos  (bala_topo)
+estojo             224 triângulos  (estojo_ejetado)
+bala_comum         160 triângulos  (bala_topo)
+bala_aco           160 triângulos  (bala_topo)
+bala_diamante      160 triângulos  (bala_topo)
+bala_netherite     160 triângulos  (bala_topo)
 
 tiro: 3 quadros, eventos {"disparo": 1}
 recarregar: 110 quadros, eventos {"tampa_abre": 13, "pente_sai": 25, "troca": 45, "pente_entra": 66, "tampa_fecha": 75, "ferrolho": 88}

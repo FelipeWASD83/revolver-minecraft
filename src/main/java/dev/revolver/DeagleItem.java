@@ -149,6 +149,8 @@ public class DeagleItem extends Item {
         EstadoDeagle e = estado(stack);
         linhas.add(Component.translatable("item.revolver.deagle.balas", e.pente(), e.camara())
                 .withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable("item.revolver.arma.calibre",
+                Component.translatable("item.revolver." + Calibre.C50.base)).withStyle(ChatFormatting.GRAY));
         TipoBala[] tipos = TipoBala.values();
         for (int i = tipos.length - 1; i >= 0; i--) {     // quantas de cada tipo, da melhor para a pior
             TipoBala t = tipos[i];

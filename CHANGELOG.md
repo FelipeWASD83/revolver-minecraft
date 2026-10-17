@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0 (17/10/2026)
+
+### Mudou
+- As armas ficaram bem mais leves: cerca de um quarto dos triângulos de antes (de 503 mil para 134 mil nas
+  oito juntas) e texturas de 64 x 64 (eram 128, e as do revólver 1024). O jar caiu de 8,6 MB para 3,4 MB. Na mão
+  a diferença quase não aparece: cada peça só é reduzida até onde a forma não muda mais que 0,75 mm.
+
+### Novo
+- A descrição de cada arma diz o cartucho que ela usa, logo abaixo da contagem de balas ("Munição: Cartucho .45").
+
 ## 2.1.0 (16/10/2026)
 
 ### Mudou

@@ -2,17 +2,17 @@ EXPORTAÇÃO DA ARMA sniper PARA O MOD
 
 comprimento: 5.13 blocos
 
-corpo            68472 triângulos  (aneis, bipe, caixa_culatra, cano, coronha, freio, guarda_mato, luneta, presilhas, soleira, tampa_objetiva, tampa_ocular, trilho)
+corpo            17118 triângulos  (aneis, bipe, caixa_culatra, cano, coronha, freio, guarda_mato, luneta, presilhas, soleira, tampa_objetiva, tampa_ocular, trilho)
 ferrolho          5092 triângulos  (ferrolho)
-gatilho           1368 triângulos  (gatilho)
+gatilho            342 triângulos  (gatilho)
 botao_pente        144 triângulos  (botao_pente)
-pente             4052 triângulos  (pente)
+pente             1012 triângulos  (pente)
 clarao             150 triângulos  (clarao)
-estojo             816 triângulos  (estojo_ejetado)
-bala_comum         880 triângulos  (bala_topo)
-bala_aco           880 triângulos  (bala_topo)
-bala_diamante      880 triângulos  (bala_topo)
-bala_netherite     880 triângulos  (bala_topo)
+estojo             204 triângulos  (estojo_ejetado)
+bala_comum         220 triângulos  (bala_topo)
+bala_aco           220 triângulos  (bala_topo)
+bala_diamante      220 triângulos  (bala_topo)
+bala_netherite     220 triângulos  (bala_topo)
 
 tiro: 40 quadros, eventos {"disparo": 3, "ferrolho_abre": 14, "ferrolho_fecha": 31}
 recarregar: 70 quadros, eventos {"pente_sai": 12, "troca": 26, "pente_entra": 40, "ferrolho": 44, "ferrolho_abre": 44, "ferrolho_fecha": 61}

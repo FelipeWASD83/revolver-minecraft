@@ -64,5 +64,6 @@
   "item.revolver.cartucho_338_aco": "Cartucho .338 Lapua de aço",
   "item.revolver.cartucho_338_diamante": "Cartucho .338 Lapua de diamante",
   "item.revolver.cartucho_338_netherite": "Cartucho .338 Lapua de netherite",
-  "item.revolver.cartucho.dano_bagos": "Dano: %s por bago (%s bagos)"
+  "item.revolver.cartucho.dano_bagos": "Dano: %s por bago (%s bagos)",
+  "item.revolver.arma.calibre": "Munição: %s"
 }

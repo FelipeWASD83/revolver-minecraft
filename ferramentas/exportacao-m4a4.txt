@@ -2,18 +2,18 @@ EXPORTAÇÃO DA ARMA m4a4 PARA O MOD
 
 comprimento: 3.36 blocos
 
-corpo            78628 triângulos  (alca_mira, anel, assistente, cano, capa_direita, capa_esquerda, castelo, coronha, defletor, guarda_mao, guarda_mato, inferior, massa_mira, pino_frente, pino_tras, punho, quebra_chamas, retem_ferrolho, seletor, soleira, superior, tampa_janela, tubo)
-ferrolho           624 triângulos  (ferrolho)
-alavanca          2404 triângulos  (alavanca)
-gatilho           1452 triângulos  (gatilho)
-pente             4344 triângulos  (pente)
-botao_pente        192 triângulos  (botao_pente)
+corpo            19656 triângulos  (alca_mira, anel, assistente, cano, capa_direita, capa_esquerda, castelo, coronha, defletor, guarda_mao, guarda_mato, inferior, massa_mira, pino_frente, pino_tras, punho, quebra_chamas, retem_ferrolho, seletor, soleira, superior, tampa_janela, tubo)
+ferrolho           160 triângulos  (ferrolho)
+alavanca           600 triângulos  (alavanca)
+gatilho            362 triângulos  (gatilho)
+pente             1086 triângulos  (pente)
+botao_pente        160 triângulos  (botao_pente)
 clarao              66 triângulos  (clarao)
-estojo             656 triângulos  (estojo_ejetado)
-bala_comum         320 triângulos  (bala_topo)
-bala_aco           320 triângulos  (bala_topo)
-bala_diamante      320 triângulos  (bala_topo)
-bala_netherite     320 triângulos  (bala_topo)
+estojo             164 triângulos  (estojo_ejetado)
+bala_comum         160 triângulos  (bala_topo)
+bala_aco           160 triângulos  (bala_topo)
+bala_diamante      160 triângulos  (bala_topo)
+bala_netherite     160 triângulos  (bala_topo)
 
 tiro: 4 quadros, eventos {"disparo": 2}
 recarregar: 70 quadros, eventos {"pente_sai": 14, "troca": 27, "pente_entra": 44, "alavanca": 55}

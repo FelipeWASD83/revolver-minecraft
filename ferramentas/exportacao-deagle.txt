@@ -1,18 +1,18 @@
 EXPORTAÇÃO DA DEAGLE PARA O MOD
 
-corpo            16044 triângulos  (armacao, cano, capuz, empunhadura, guarda_mato, massa_mira, parafuso_placa, pino_cao, pino_gatilho)
-ferrolho         10052 triângulos  (ferrolho)
-cao               1724 triângulos  (cao)
-gatilho           1312 triângulos  (gatilho)
-trava             2230 triângulos  (trava_ferrolho)
-botao              192 triângulos  (botao_pente)
-pente             5056 triângulos  (pente)
+corpo             4010 triângulos  (armacao, cano, capuz, empunhadura, guarda_mato, massa_mira, parafuso_placa, pino_cao, pino_gatilho)
+ferrolho          5026 triângulos  (ferrolho)
+cao                430 triângulos  (cao)
+gatilho            328 triângulos  (gatilho)
+trava              556 triângulos  (trava_ferrolho)
+botao              160 triângulos  (botao_pente)
+pente             1264 triângulos  (pente)
 clarao              90 triângulos  (clarao)
-estojo             736 triângulos  (estojo_ejetado)
-bala_comum         400 triângulos  (bala_topo)
-bala_aco           400 triângulos  (bala_topo)
-bala_diamante      400 triângulos  (bala_topo)
-bala_netherite     400 triângulos  (bala_topo)
+estojo             184 triângulos  (estojo_ejetado)
+bala_comum         160 triângulos  (bala_topo)
+bala_aco           160 triângulos  (bala_topo)
+bala_diamante      160 triângulos  (bala_topo)
+bala_netherite     160 triângulos  (bala_topo)
 
 tiro: 14 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala
 tiro_ultimo: 14 quadros, peças que mexem: corpo, ferrolho, cao, gatilho, trava, botao, pente, clarao, ejetado, topo_estojo, topo_bala

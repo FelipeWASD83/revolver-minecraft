@@ -18,6 +18,85 @@ PASTA = Path(__file__).resolve().parent.parent
 ASSETS = PASTA / "src" / "main" / "resources" / "assets" / "revolver"
 TEXTURAS = ASSETS / "textures" / "item"
 ESCALA = 1 / 250.0
+# Otimização (2.2.0, pedido dele): o jogo recebe uma versão leve do modelo do Blender, reduzida por colapso de
+# arestas (leva UV e material junto). Cada peça tenta as frações de RAZOES em ordem e fica com a primeira cuja malha
+# não se afasta da original mais que TOLERANCIA (nos dois sentidos: detalhe que sumiu e ponta que apareceu); peça
+# pequena não cai abaixo de MINIMO_TRIS. Cortar a mesma fração de tudo destruía a mira da deagle e a bolinha do
+# ferrolho da sniper. As texturas descem para LADO_TEXTURA px. Os projetos <arma>-3d continuam com o detalhe todo.
+RAZOES = (0.25, 0.35, 0.5, 0.7)
+TOLERANCIA = 0.003          # blocos: 0,75 mm no modelo, menos de um pixel na mão
+MINIMO_TRIS = 160
+LADO_TEXTURA = 64
+
+
+def _distancia_maxima(pontos, arvore):
+    pior = 0.0
+    for p in pontos:
+        achado = arvore.find_nearest(p)
+        if achado[0] is not None:
+            pior = max(pior, achado[3])
+    return pior
+
+
+def reduzir(bm):
+    """Deixa o bmesh low poly com o menor número de triângulos que ainda respeita a TOLERANCIA."""
+    from mathutils.bvhtree import BVHTree
+    bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 3], quad_method='BEAUTY',
+                          ngon_method='BEAUTY')
+    original = len(bm.faces)
+    if original <= MINIMO_TRIS:
+        return
+    arvore_original = BVHTree.FromBMesh(bm)
+    pontos_originais = [v.co.copy() for v in bm.verts]
+    me = bpy.data.meshes.new("_reduzir")
+    bm.to_mesh(me)
+    ob = bpy.data.objects.new("_reduzir", me)
+    bpy.context.scene.collection.objects.link(ob)
+    mod = ob.modifiers.new("reduzir", 'DECIMATE')
+    mod.decimate_type = 'COLLAPSE'
+    mod.use_collapse_triangulate = True
+    escolhida = None
+    try:
+        for razao in RAZOES:
+            alvo = max(MINIMO_TRIS, int(original * razao))
+            if alvo >= original:
+                break
+            mod.ratio = alvo / original
+            dg = bpy.context.evaluated_depsgraph_get()
+            dg.update()
+            ev = ob.evaluated_get(dg)
+            reduzida = ev.to_mesh()
+            vs = [v.co.copy() for v in reduzida.vertices]
+            arvore = BVHTree.FromPolygons(vs, [p.vertices[:] for p in reduzida.polygons])
+            erro = max(_distancia_maxima(pontos_originais, arvore), _distancia_maxima(vs, arvore_original))
+            if erro <= TOLERANCIA:
+                escolhida = bmesh.new()
+                escolhida.from_mesh(reduzida)
+            ev.to_mesh_clear()
+            if escolhida is not None:
+                break
+    finally:
+        bpy.data.objects.remove(ob)
+        bpy.data.meshes.remove(me)
+    if escolhida is None:              # nenhuma fração passou: a peça fica como veio
+        return
+    tmp = bpy.data.meshes.new("_tmp")
+    escolhida.to_mesh(tmp)
+    escolhida.free()
+    bm.clear()
+    bm.from_mesh(tmp)
+    bpy.data.meshes.remove(tmp)
+
+
+def reduzir_textura(caminho, lado=LADO_TEXTURA):
+    """Regrava o PNG em `lado` x `lado` (média de pixels, não o vizinho mais próximo)."""
+    img = bpy.data.images.load(str(caminho))
+    if img.size[0] > lado or img.size[1] > lado:
+        img.scale(lado, lado)
+        img.filepath_raw = str(caminho)
+        img.file_format = 'PNG'
+        img.save()
+    bpy.data.images.remove(img)
 
 
 def matriz_item(raiz, centro):
@@ -59,6 +138,7 @@ def escrever_obj(pasta, nome, bm, materiais, tabela, texturas, cabecalho, emissi
     models/item/<pasta>/. `tabela` diz a textura e a cor de cada material; `texturas` vai no JSON do modelo."""
     modelos = ASSETS / "models" / "item" / pasta
     me = bpy.data.meshes.new(nome)
+    reduzir(bm)
     bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4])
     bm.to_mesh(me)
     bm.free()

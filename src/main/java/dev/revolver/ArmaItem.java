@@ -214,6 +214,8 @@ public class ArmaItem extends Item {
         EstadoArma e = estado(stack);
         linhas.add(Component.translatable("item.revolver.arma.municao", e.municao().size(), arma.capacidade)
                 .withStyle(ChatFormatting.GRAY));
+        linhas.add(Component.translatable("item.revolver.arma.calibre",
+                Component.translatable("item.revolver." + arma.calibre.base)).withStyle(ChatFormatting.GRAY));
         TipoBala[] tipos = TipoBala.values();
         for (int i = tipos.length - 1; i >= 0; i--) {     // quantas de cada tipo, da melhor para a pior
             TipoBala t = tipos[i];

@@ -195,6 +195,7 @@ def principal():
     # ---- texturas e itens
     for nome in ("madeira", "tempera"):
         shutil.copyfile(ORIGEM / "modelo" / f"{nome}.png", TEXTURAS / "revolver" / f"{nome}.png")
+        comum.reduzir_textura(TEXTURAS / "revolver" / f"{nome}.png")
     comum.textura_branca("revolver")
     for _, item_nome, _, escura, clara in TIPOS:
         comum.icone_cartucho(item_nome, escura, clara)

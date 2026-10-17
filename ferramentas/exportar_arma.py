@@ -97,12 +97,14 @@ def tabela_materiais():
     return tabela
 
 
-def salvar_textura(imagem, nome, lado=128):
-    """A imagem do material reduzida a 128 px e clareada como as cores."""
+def salvar_textura(imagem, nome, lado=comum.LADO_TEXTURA):
+    """A imagem do material reduzida a `lado` px e clareada como as cores."""
     w, h = imagem.size
     px = np.array(imagem.pixels[:], dtype=np.float32).reshape(h, w, 4)
-    passo_y, passo_x = max(1, h // lado), max(1, w // lado)
-    px = px[::passo_y, ::passo_x][:lado, :lado].copy()
+    passo_y, passo_x = max(1, h // (lado * 2)), max(1, w // (lado * 2))
+    px = px[::passo_y, ::passo_x][:lado * 2, :lado * 2].copy()
+    if px.shape[0] >= lado * 2 and px.shape[1] >= lado * 2:     # média de 2 x 2 em vez do vizinho mais próximo
+        px = px[:lado * 2, :lado * 2].reshape(lado, 2, lado, 2, 4).mean(axis=(1, 3))
     v = px[..., :3].max(axis=-1, keepdims=True)
     alvo = np.minimum(0.92, 0.24 + 1.4 * v)
     px[..., :3] = np.clip(px[..., :3] * np.where(v > 1e-6, alvo / np.maximum(v, 1e-6), 1.0), 0, 1)

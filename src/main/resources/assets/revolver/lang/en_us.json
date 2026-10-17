@@ -64,5 +64,6 @@
   "item.revolver.cartucho_338_aco": ".338 Lapua Steel Cartridge",
   "item.revolver.cartucho_338_diamante": ".338 Lapua Diamond Cartridge",
   "item.revolver.cartucho_338_netherite": ".338 Lapua Netherite Cartridge",
-  "item.revolver.cartucho.dano_bagos": "Damage: %s per pellet (%s pellets)"
+  "item.revolver.cartucho.dano_bagos": "Damage: %s per pellet (%s pellets)",
+  "item.revolver.arma.calibre": "Ammo: %s"
 }
