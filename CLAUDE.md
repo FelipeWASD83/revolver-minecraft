@@ -83,8 +83,8 @@ quando ele pedir.
   de ação simples, o polegar arma antes. Raio no servidor até 64 blocos; **o dano é o da bala da câmara**.
 - **Tipos de bala (1.1.0, pedido dele: "a mais básica dá 20, a melhor 200")**: `logica/TipoBala` com
   comum 20, aço 50, diamante 100 e netherite 200 (o de netherite não queima). **A ordem do enum é o número
-  guardado em cada câmara: não reordenar; tipo novo entra no fim** (só cabem 4 em 2 bits; o quinto pede
-  ampliar o campo). O estado ganhou `tipos` e `tipos_novos` como campos **opcionais**: revólver salvo na
+  guardado em cada câmara: não reordenar; tipo novo entra no fim** (desde a 2.3.0 são 4 bits por lugar,
+  cabem 16; ver "Tipos de mod" abaixo). O estado ganhou `tipos` e `tipos_novos` como campos **opcionais**: revólver salvo na
   1.0.x lê tudo como comum (há teste). A recarga pega os cartuchos como o arco pega flecha (outra mão,
   depois a ordem do inventário) e pode misturar tipos. O cartucho comum mantém o nome `cartucho_45` da 1.0.
   Cada tipo tem um modelo de bala (`bala_<tipo>`, a mesma malha com a ponta na cor dele) e um ícone; a
@@ -126,6 +126,24 @@ quando ele pedir.
   - de 503 mil para 134 mil triângulos nas oito armas, jar de 8,6 MB para 3,4 MB.
 - **A descrição da arma diz o cartucho** (2.2.0): `item.revolver.arma.calibre` ("Munição: %s") com o nome do
   cartucho comum do calibre, logo depois da linha das balas, nos três itens.
+- **Tipos de mod e Bandoleira do Fim** (2.3.0, pedido dele):
+  - sete tipos depois do netherite no `TipoBala`, cada um com o mod e o item do material (ardente, insanium,
+    ignitium, dracônico, matéria vermelha, antimatéria, infinito); os ids foram conferidos nos jars da Horizonte
+    Infinito. As receitas (`ferramentas/gerar_tipos_mod.py`, que também escreve os nomes e o ícone da bandoleira)
+    levam `neoforge:conditions` com `neoforge:mod_loaded`; o item é sempre registrado (arma carregada com ele não
+    perde a bala), mas só entra na aba do criativo com o mod instalado;
+  - **formato 4 bits:** o revólver e a deagle guardam o tipo em 4 bits por lugar. O codec dos dois estados lê
+    `formato_tipos` (ausente = 1 = 2 bits, convertido por `Tambor.de2Para4Bits`) e grava sempre 2. Os testes não
+    têm as classes do Minecraft, então só a conversão é testada, não o codec;
+  - **infinito:** `Disparo.matar` (dano máximo; se o alvo continuar vivo, vida a zero e `die`; parte do dragão vira o
+    dragão; jogador no criativo ou espectador é poupado); a bala não sai da arma no tiro (revólver não deflagra a
+    câmara, deagle não sobe a próxima nem abre o ferrolho, armas novas não tiram da lista);
+  - fogo no ardente (5 s) e no ignitium (8 s); explosão de 1,5 sem quebrar bloco no primeiro ponto atingido pela
+    antimatéria;
+  - **`Municao`** junta a fila da recarga das oito armas: outra mão e inventário como o arco; criativo completa
+    com o comum; com a Bandoleira do Fim nada é gasto e a fila inteira é o melhor tipo do calibre que o jogador
+    tiver;
+  - as cores das pontas novas estão em `comum.TIPOS_MOD`; o ícone do infinito sai em arco-íris.
 - **Fora da regra de atualização dentro do app**: mod é carregado pelo launcher, não é app.
 
 ## Desert Eagle (1.2.0, 16/10/2026)
@@ -145,7 +163,7 @@ aprovado com munição .50 AE própria. O modelo é o do `deagle-3d`.
   - os cartuchos são `cartucho_50` e `cartucho_50_<tipo>`, e `CartuchoItem` guarda o calibre;
   - **cada arma só aceita o próprio calibre**, e o revólver passou a filtrar.
 - **Pente** (`logica/Pente`, sem Minecraft, testado):
-  - 7 no pente e 1 na câmara, com o tipo de cada bala em 2 bits e a de cima no lugar 0;
+  - 7 no pente e 1 na câmara, com o tipo de cada bala em 4 bits (2 até a 2.2.0) e a de cima no lugar 0;
   - o tiro gasta a da câmara e sobe a de cima do pente; sem bala no pente, câmara vazia e **ferrolho aberto**;
   - a recarga mantém as que sobraram no pente velho (saem primeiro) e completa com cartuchos, na ordem do arco;
   - aberta, no fim da recarga a de cima vai para a câmara.
@@ -187,7 +205,11 @@ aprovado com munição .50 AE própria. O modelo é o do `deagle-3d`.
 
   O gerador recodifica todos os OGG e o Vorbis muda os bytes a cada vez. Se os sons do revólver não mudaram,
   devolver os OGG dele ao commit (`git checkout`) em vez de commitar o ruído.
-- **Tecla R e nome do mod:** a tecla R recarrega a arma que estiver na mão (`RecarregarMsg` decide pelo item). O
+- **Tecla de recarregar e nome do mod:** a tecla recarrega a arma que estiver na mão (`RecarregarMsg` decide
+  pelo item). **Desde a 2.3.0 é o Caps Lock**, não o R: na Horizonte Infinito o R recarrega os shaders (Iris) e
+  todas as letras têm dono (conferido no `options.txt` dela; livres eram Caps Lock, mouse 5, `;`, `'`, `,`, `.`,
+  `-`, `=`, Insert e afins). Mudar o padrão no código não muda quem já jogou: a tecla gravada fica no `options.txt`
+  de cada instância (`key_key.revolver.recarregar`), e foi trocada lá nas duas. O
   nome do mod passou para "Revólver e Desert Eagle", e a categoria de teclas para "Armas".
 
 ## As seis armas novas (2.0.0, 16/10/2026)

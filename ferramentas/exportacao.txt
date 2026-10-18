@@ -12,6 +12,13 @@ bala_comum     160 triângulos  (bala_0)
 bala_aco       160 triângulos  (bala_0)
 bala_diamante    160 triângulos  (bala_0)
 bala_netherite    160 triângulos  (bala_0)
+bala_ardente    160 triângulos  (bala_0)
+bala_insanium    160 triângulos  (bala_0)
+bala_ignitium    160 triângulos  (bala_0)
+bala_draconico    160 triângulos  (bala_0)
+bala_materia_vermelha    160 triângulos  (bala_0)
+bala_antimateria    160 triângulos  (bala_0)
+bala_infinito    160 triângulos  (bala_0)
 
 tiro: 50 quadros, peças que mexem: corpo, cao, gatilho, tambor, portinhola, botao, clarao, estojo0, bala0, estojo1, bala1, estojo2, bala2, estojo3, bala3, estojo4, bala4, estojo5, bala5
 recarregar: 340 quadros, peças que mexem: cao, tambor, portinhola, botao, estojo0, bala0, estojo1, bala1, estojo2, bala2, estojo3, bala3, estojo4, bala4, estojo5, bala5

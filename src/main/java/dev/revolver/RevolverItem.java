@@ -57,32 +57,10 @@ public class RevolverItem extends Item {
         if (!stack.is(Registros.REVOLVER.get())) return;
         EstadoRevolver e = estado(stack);
         if (e.acao() != EstadoRevolver.PARADO) return;
-        boolean criativo = jogador.getAbilities().instabuild;
-        // os cartuchos saem como as flechas do arco: primeiro os da outra mão, depois na ordem do inventário
-        List<ItemStack> pilhas = new ArrayList<>();
-        pilhas.add(jogador.getOffhandItem());
-        pilhas.addAll(jogador.getInventory().items);
-        int precisa = Tambor.semBala(e.camaras());
-        List<Integer> fila = new ArrayList<>();
-        for (ItemStack pilha : pilhas) {
-            if (!(pilha.getItem() instanceof CartuchoItem cartucho) || cartucho.calibre != Calibre.C45) continue;
-            for (int k = 0; k < pilha.getCount() && fila.size() < precisa; k++) fila.add(cartucho.tipo.ordinal());
-        }
-        if (criativo) {
-            while (fila.size() < precisa) fila.add(TipoBala.COMUM.ordinal());   // no criativo nunca falta
-        }
-        Tambor.Plano plano = Tambor.planejar(e.camaras(), e.posicao(), fila.stream().mapToInt(Integer::intValue).toArray());
+        int[] fila = Municao.fila(jogador, Calibre.C45, Tambor.semBala(e.camaras()));
+        Tambor.Plano plano = Tambor.planejar(e.camaras(), e.posicao(), fila);
         if (plano.carregar() == 0 && !Tambor.temDeflagrada(e.camaras())) return;
-        if (!criativo) {
-            int gastar = Integer.bitCount(plano.carregar());
-            for (ItemStack pilha : pilhas) {
-                if (gastar == 0) break;
-                if (!(pilha.getItem() instanceof CartuchoItem cartucho) || cartucho.calibre != Calibre.C45) continue;
-                int tira = Math.min(gastar, pilha.getCount());
-                pilha.shrink(tira);
-                gastar -= tira;
-            }
-        }
+        Municao.gastar(jogador, Calibre.C45, Integer.bitCount(plano.carregar()));
         stack.set(Registros.ESTADO.get(),
                 e.comecarRecarga(jogador.level().getGameTime(), plano.carregar(), plano.tipos()));
     }
@@ -108,9 +86,12 @@ public class RevolverItem extends Item {
             if (e.acao() == EstadoRevolver.TIRO) {
                 int camara = Tambor.camaraDoDisparo(e.posicao());
                 TipoBala bala = TipoBala.de(Tambor.tipo(e.tipos(), camara));
-                stack.set(Registros.ESTADO.get(), e.comCamaras(Tambor.com(e.camaras(), camara, Tambor.DEFLAGRADA)));
+                if (!bala.infinito()) {         // a infinita continua na câmara, inteira
+                    stack.set(Registros.ESTADO.get(), e.comCamaras(Tambor.com(e.camaras(), camara, Tambor.DEFLAGRADA)));
+                }
                 som(level, jogador, Registros.SOM_TIRO.get(), 4.0f, 0.95f + level.random.nextFloat() * 0.1f);
-                Disparo.atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack, bala.dano(Calibre.C45));
+                Disparo.atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack, bala,
+                        bala.dano(Calibre.C45));
             } else {
                 som(level, jogador, Registros.SOM_CLIQUE_SECO.get(), 1.0f, 1.0f);
             }
@@ -174,7 +155,8 @@ public class RevolverItem extends Item {
             }
             if (n > 0) {
                 linhas.add(Component.translatable("item.revolver.revolver.tipo", n,
-                        Component.translatable("item.revolver." + t.item), (int) t.dano).withStyle(ChatFormatting.DARK_GRAY));
+                        Component.translatable("item.revolver." + t.item), CartuchoItem.textoDano(t.dano))
+                        .withStyle(ChatFormatting.DARK_GRAY));
             }
         }
     }

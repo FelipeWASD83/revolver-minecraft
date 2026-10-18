@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "STS",
+    "BEB",
+    "SLS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:nether_star"
+    },
+    "T": {
+      "item": "minecraft:totem_of_undying"
+    },
+    "B": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "minecraft:dragon_egg"
+    },
+    "L": {
+      "item": "minecraft:elytra"
+    }
+  },
+  "result": {
+    "id": "revolver:bandoleira_do_fim",
+    "count": 1
+  }
+}

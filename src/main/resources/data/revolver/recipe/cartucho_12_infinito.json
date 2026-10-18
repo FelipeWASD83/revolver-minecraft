@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "avaritia"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "CCC",
+    "CMC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "revolver:cartucho_12_netherite"
+    },
+    "M": {
+      "item": "avaritia:infinity_ingot"
+    }
+  },
+  "result": {
+    "id": "revolver:cartucho_12_infinito",
+    "count": 1
+  }
+}

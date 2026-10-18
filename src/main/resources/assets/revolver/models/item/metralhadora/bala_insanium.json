@@ -1,0 +1,12 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/metralhadora/bala_insanium.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "branco": "revolver:item/metralhadora/branco",
+    "particle": "revolver:item/metralhadora/branco"
+  }
+}

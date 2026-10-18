@@ -2,6 +2,7 @@ package dev.revolver;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.revolver.logica.Tambor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.VarLong;
@@ -11,7 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
  * O que fica guardado na Desert Eagle (componente de dados, salvo no mundo e mandado aos jogadores por perto).
  *
  * @param pente      quantas balas há no pente (0 a 7)
- * @param tipos      tipo de cada bala do pente ({@link dev.revolver.logica.TipoBala}), 2 bits cada, a de cima no lugar 0
+ * @param tipos      tipo de cada bala do pente ({@link dev.revolver.logica.TipoBala}), 4 bits cada, a de cima no lugar 0
  * @param camara     1 se tem bala na câmara; 0 é o ferrolho aberto
  * @param tipoCamara tipo da bala da câmara
  * @param acao       o que está acontecendo agora ({@link #PARADO}, {@link #TIRO}...)
@@ -42,8 +43,13 @@ public record EstadoDeagle(int pente, int tipos, int camara, int tipoCamara, int
             Codec.INT.fieldOf("acao").forGetter(EstadoDeagle::acao),
             Codec.LONG.fieldOf("inicio").forGetter(EstadoDeagle::inicio),
             Codec.INT.fieldOf("novo_pente").forGetter(EstadoDeagle::novoPente),
-            Codec.INT.fieldOf("novos_tipos").forGetter(EstadoDeagle::novosTipos)
-    ).apply(i, EstadoDeagle::new));
+            Codec.INT.fieldOf("novos_tipos").forGetter(EstadoDeagle::novosTipos),
+            // sem "formato_tipos" é o formato até a 2.2.0 (2 bits por bala do pente): convertido para 4 bits
+            Codec.INT.optionalFieldOf("formato_tipos", 1).forGetter(e -> 2)
+    ).apply(i, (pente, tipos, camara, tipoCamara, acao, inicio, novoPente, novosTipos, formato) -> formato >= 2
+            ? new EstadoDeagle(pente, tipos, camara, tipoCamara, acao, inicio, novoPente, novosTipos)
+            : new EstadoDeagle(pente, Tambor.de2Para4Bits(tipos, 7), camara, tipoCamara, acao, inicio, novoPente,
+                    Tambor.de2Para4Bits(novosTipos, 7))));
 
     public static final StreamCodec<ByteBuf, EstadoDeagle> STREAM_CODEC = StreamCodec.of(
             (buf, e) -> {

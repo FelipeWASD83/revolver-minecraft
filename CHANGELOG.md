@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.3.0 (17/10/2026)
+
+### Novo
+- **Bandoleira do Fim:** com ela no inventário, recarregar não gasta cartucho. A arma enche com o melhor
+  cartucho daquele calibre que você tiver (ou o comum, se não tiver nenhum). A receita leva o ovo do dragão, 4
+  estrelas do Nether, 2 blocos de netherite, um totem da imortalidade e uma elytra.
+- **Sete cartuchos com material de outro mod**, em todos os calibres, feitos com 8 cartuchos de netherite em
+  volta do material: ardente (Twilight Forest, põe fogo), insanium (Mystical Agradditions), ignitium (Ender's
+  Cataclysm, põe fogo), dracônico (Draconic Evolution), matéria vermelha (ProjectE), antimatéria (Mekanism,
+  explode sem quebrar bloco) e infinito (Avaritia). Sem o mod, a receita não aparece e o cartucho sai da aba do
+  criativo.
+- **Cartucho infinito:** mata o que acertar, até chefe que limita o dano, e nunca acaba: atirar não gasta a
+  bala. A receita dá um só. A ponta do ícone é arco-íris.
+
+### Mudou
+- A tecla de recarregar passou do R para o **Caps Lock**: no modpack o R recarrega os shaders, e nenhuma letra
+  estava livre. Nas duas instâncias a tecla já foi trocada nas opções.
+- O tipo de bala guardado no revólver e na Desert Eagle passou a caber 16 tipos. Arma salva antes é convertida
+  sozinha ao carregar o mundo, sem perder as balas.
+
 ## 2.2.0 (17/10/2026)
 
 ### Mudou

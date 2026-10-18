@@ -62,7 +62,7 @@ TIPOS = [
     ("aco", "cartucho_50_aco", (0.82, 0.84, 0.88), (0.66, 0.68, 0.73), (0.93, 0.94, 0.96)),
     ("diamante", "cartucho_50_diamante", (0.38, 0.90, 0.86), (0.20, 0.70, 0.68), (0.60, 0.97, 0.94)),
     ("netherite", "cartucho_50_netherite", (0.32, 0.27, 0.29), (0.22, 0.18, 0.20), (0.45, 0.40, 0.42)),
-]
+] + [(n, "cartucho_50" + suf, p, e, c) for n, suf, p, e, c in comum.TIPOS_MOD]
 
 # Como a deagle aparece em cada lugar (mesma conta do revólver; ela é maior, então a escala é um pouco menor)
 EXIBICAO = {

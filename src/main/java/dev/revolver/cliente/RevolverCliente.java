@@ -51,12 +51,14 @@ import java.util.Map;
 /** Só no cliente: a tecla de recarregar, os modelos das peças, as animações e os renderizadores das duas armas. */
 public final class RevolverCliente {
     private static final Logger LOG = LogUtils.getLogger();
-    public static final String[] PECAS = {"corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao", "estojo",
-            "bala_comum", "bala_aco", "bala_diamante", "bala_netherite"};
-    public static final String[] PECAS_DEAGLE = {"corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente",
-            "clarao", "estojo", "bala_comum", "bala_aco", "bala_diamante", "bala_netherite"};
+    /** As peças do revólver e da deagle; as balas são uma por tipo de cartucho ({@link TipoBala#modelo}). */
+    public static final String[] PECAS = comBalas("corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao",
+            "estojo");
+    public static final String[] PECAS_DEAGLE = comBalas("corpo", "ferrolho", "cao", "gatilho", "trava", "botao",
+            "pente", "clarao", "estojo");
+    // Caps Lock desde a 2.3.0: no modpack dele o R recarrega os shaders (Iris) e todas as letras já têm dono
     public static final KeyMapping TECLA_RECARREGAR = new KeyMapping("key.revolver.recarregar",
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.revolver");
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_CAPS_LOCK, "key.categories.revolver");
     private static Animacao animacao;
     private static Animacao animacaoDeagle;
     private static final Map<Arma, Animacao> ANIMACOES_ARMAS = new EnumMap<>(Arma.class);
@@ -85,6 +87,12 @@ public final class RevolverCliente {
 
     public static Animacao animacaoArma(Arma arma) {
         return ANIMACOES_ARMAS.get(arma);
+    }
+
+    private static String[] comBalas(String... pecas) {
+        List<String> todas = new ArrayList<>(List.of(pecas));
+        for (TipoBala t : TipoBala.values()) todas.add(t.modelo);
+        return todas.toArray(new String[0]);
     }
 
     /** Os modelos de uma arma nova: o corpo, as peças que mexem e as especiais. */

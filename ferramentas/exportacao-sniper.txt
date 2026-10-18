@@ -13,6 +13,13 @@ bala_comum         220 triângulos  (bala_topo)
 bala_aco           220 triângulos  (bala_topo)
 bala_diamante      220 triângulos  (bala_topo)
 bala_netherite     220 triângulos  (bala_topo)
+bala_ardente       220 triângulos  (bala_topo)
+bala_insanium      220 triângulos  (bala_topo)
+bala_ignitium      220 triângulos  (bala_topo)
+bala_draconico     220 triângulos  (bala_topo)
+bala_materia_vermelha    220 triângulos  (bala_topo)
+bala_antimateria    220 triângulos  (bala_topo)
+bala_infinito      220 triângulos  (bala_topo)
 
 tiro: 40 quadros, eventos {"disparo": 3, "ferrolho_abre": 14, "ferrolho_fecha": 31}
 recarregar: 70 quadros, eventos {"pente_sai": 12, "troca": 26, "pente_entra": 40, "ferrolho": 44, "ferrolho_abre": 44, "ferrolho_fecha": 61}

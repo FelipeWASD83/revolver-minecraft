@@ -1,0 +1,13 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/deagle/bala_antimateria.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "borracha": "revolver:item/deagle/borracha",
+    "branco": "revolver:item/deagle/branco",
+    "particle": "revolver:item/deagle/branco"
+  }
+}

@@ -6,6 +6,7 @@ direito para +Z, que é o lado que aparece no inventário. 250 mm do modelo = 1 
 um pouco maior que o revólver, como na vida real).
 """
 
+import colorsys
 import json
 import math
 from pathlib import Path
@@ -23,6 +24,19 @@ ESCALA = 1 / 250.0
 # não se afasta da original mais que TOLERANCIA (nos dois sentidos: detalhe que sumiu e ponta que apareceu); peça
 # pequena não cai abaixo de MINIMO_TRIS. Cortar a mesma fração de tudo destruía a mira da deagle e a bolinha do
 # ferrolho da sniper. As texturas descem para LADO_TEXTURA px. Os projetos <arma>-3d continuam com o detalhe todo.
+# Os tipos de cartucho feitos com material de outro mod (2.3.0), depois do netherite, na ordem do TipoBala.java:
+# (nome, sufixo do item, cor da ponta no modelo, cor escura e clara da ponta no ícone). O ícone do infinito sai com
+# a ponta em arco-íris, como o lingote do Avaritia.
+TIPOS_MOD = [
+    ("ardente", "_ardente", (0.95, 0.32, 0.08), (0.72, 0.18, 0.04), (1.00, 0.58, 0.25)),
+    ("insanium", "_insanium", (0.55, 0.22, 0.78), (0.36, 0.12, 0.55), (0.74, 0.45, 0.92)),
+    ("ignitium", "_ignitium", (0.98, 0.80, 0.22), (0.80, 0.56, 0.08), (1.00, 0.93, 0.55)),
+    ("draconico", "_draconico", (0.98, 0.52, 0.12), (0.78, 0.34, 0.04), (1.00, 0.72, 0.38)),
+    ("materia_vermelha", "_materia_vermelha", (0.62, 0.04, 0.10), (0.42, 0.02, 0.06), (0.86, 0.20, 0.26)),
+    ("antimateria", "_antimateria", (0.88, 0.22, 0.70), (0.62, 0.10, 0.48), (0.98, 0.52, 0.88)),
+    ("infinito", "_infinito", (0.96, 0.96, 1.00), (0.80, 0.82, 0.92), (1.00, 1.00, 1.00)),
+]
+
 RAZOES = (0.25, 0.35, 0.5, 0.7)
 TOLERANCIA = 0.003          # blocos: 0,75 mm no modelo, menos de um pixel na mão
 MINIMO_TRIS = 160
@@ -291,6 +305,10 @@ def icone_cartucho(nome, ponta_escura, ponta_clara, a=(3.2, 12.8), b=(12.8, 3.2)
                     cor = c2 if d < -0.55 else (c1 if d > 0.55 else c0)
                 else:
                     cor = latao_cla if d < -0.55 else (latao_esc if d > 0.55 else latao)
+            elif nome.endswith("_infinito"):                  # arco-íris ao longo da ponta
+                r, g, b_ = colorsys.hsv_to_rgb((t - inicio_ponta) / (1 - inicio_ponta) * 0.85, 0.65,
+                                               1.0 if d < -0.3 else 0.85)
+                cor = (r, g, b_, 1)
             else:
                 cor = ponta_cla if d < -0.3 else ponta
             px[y][x] = cor

@@ -21,12 +21,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RecursosTest {
     static final Path ASSETS = Path.of("src/main/resources/assets/revolver");
     static final Path DATA = Path.of("src/main/resources/data/revolver");
-    // o mesmo que dev.revolver.cliente.RevolverCliente.PECAS (essa classe é só do cliente)
-    static final List<String> PECAS = List.of("corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao",
-            "estojo", "bala_comum", "bala_aco", "bala_diamante", "bala_netherite");
+    // o mesmo que dev.revolver.cliente.RevolverCliente.PECAS (essa classe é só do cliente): as peças e uma bala por tipo
+    static final List<String> PECAS = comBalas("corpo", "cao", "gatilho", "tambor", "portinhola", "botao", "clarao",
+            "estojo");
     // o mesmo que dev.revolver.cliente.RevolverCliente.PECAS_DEAGLE
-    static final List<String> PECAS_DEAGLE = List.of("corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente",
-            "clarao", "estojo", "bala_comum", "bala_aco", "bala_diamante", "bala_netherite");
+    static final List<String> PECAS_DEAGLE = comBalas("corpo", "ferrolho", "cao", "gatilho", "trava", "botao", "pente",
+            "clarao", "estojo");
+
+    static List<String> comBalas(String... pecas) {
+        List<String> todas = new java.util.ArrayList<>(List.of(pecas));
+        for (TipoBala t : TipoBala.values()) todas.add(t.modelo);
+        return todas;
+    }
 
     static JsonObject json(Path p) throws IOException {
         return JsonParser.parseString(Files.readString(p, StandardCharsets.UTF_8)).getAsJsonObject();
@@ -143,6 +149,40 @@ class RecursosTest {
             for (TipoBala tipo : TipoBala.values()) {
                 assertTrue(pt.has("item.revolver." + tipo.item(calibre)), tipo.item(calibre));
             }
+        }
+    }
+
+    @Test
+    void receitasDosTiposDeModSoComOMod() throws IOException {
+        for (Calibre calibre : Calibre.values()) {
+            for (TipoBala tipo : TipoBala.values()) {
+                if (tipo.mod == null) continue;
+                JsonObject r = json(DATA.resolve("recipe/" + tipo.item(calibre) + ".json"));
+                JsonObject condicao = r.getAsJsonArray("neoforge:conditions").get(0).getAsJsonObject();
+                assertEquals("neoforge:mod_loaded", condicao.get("type").getAsString());
+                assertEquals(tipo.mod, condicao.get("modid").getAsString(), tipo.item(calibre));
+                JsonObject chave = r.getAsJsonObject("key");
+                assertEquals(tipo.material, chave.getAsJsonObject("M").get("item").getAsString());
+                assertEquals("revolver:" + TipoBala.NETHERITE.item(calibre),
+                        chave.getAsJsonObject("C").get("item").getAsString());
+                assertEquals(tipo.infinito() ? 1 : 8, r.getAsJsonObject("result").get("count").getAsInt());
+            }
+        }
+    }
+
+    @Test
+    void bandoleiraTemReceitaComOOvoModeloENome() throws IOException {
+        JsonObject r = json(DATA.resolve("recipe/bandoleira_do_fim.json"));
+        assertTrue(r.toString().contains("minecraft:dragon_egg"));
+        assertEquals("revolver:bandoleira_do_fim", r.getAsJsonObject("result").get("id").getAsString());
+        assertEquals("revolver:item/bandoleira_do_fim", json(ASSETS.resolve("models/item/bandoleira_do_fim.json"))
+                .getAsJsonObject("textures").get("layer0").getAsString());
+        assertTrue(Files.exists(ASSETS.resolve("textures/item/bandoleira_do_fim.png")));
+        JsonObject pt = json(ASSETS.resolve("lang/pt_br.json"));
+        for (String k : List.of("item.revolver.bandoleira_do_fim", "item.revolver.bandoleira_do_fim.descricao",
+                "item.revolver.cartucho.infinito", "item.revolver.cartucho.nunca_acaba", "item.revolver.cartucho.fogo",
+                "item.revolver.cartucho.explode")) {
+            assertTrue(pt.has(k), k);
         }
     }
 

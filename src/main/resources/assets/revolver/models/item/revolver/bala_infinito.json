@@ -1,0 +1,14 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/revolver/bala_infinito.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "madeira": "revolver:item/revolver/madeira",
+    "tempera": "revolver:item/revolver/tempera",
+    "branco": "revolver:item/revolver/branco",
+    "particle": "revolver:item/revolver/madeira"
+  }
+}

@@ -14,7 +14,7 @@ class TiposDeBalaTest {
     void danos() {
         assertEquals(20f, TipoBala.COMUM.dano);
         assertEquals(200f, TipoBala.NETHERITE.dano);
-        assertEquals(TipoBala.values().length, 4);
+        assertEquals(TipoBala.values().length, 11);
         // a ordem não pode mudar: é o número guardado em cada câmara
         assertEquals(0, C);
         assertEquals(3, N);

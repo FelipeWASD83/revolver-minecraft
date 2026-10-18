@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "revolver:item/cartucho_762x39_materia_vermelha"
+  }
+}

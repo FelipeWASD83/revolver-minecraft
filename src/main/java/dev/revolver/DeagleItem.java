@@ -42,8 +42,10 @@ public class DeagleItem extends Item {
         EstadoDeagle e = estado(stack);
         if (e.acao() != EstadoDeagle.PARADO) return InteractionResultHolder.fail(stack);
         if (!level.isClientSide) {
+            // com a bala infinita na câmara o ferrolho nunca fica aberto: ela não sai
+            boolean infinita = TipoBala.de(e.tipoCamara()).infinito();
             int acao = e.camara() == 0 ? EstadoDeagle.SECO
-                    : (e.pente() > 0 ? EstadoDeagle.TIRO : EstadoDeagle.TIRO_ULTIMO);
+                    : (e.pente() > 0 || infinita ? EstadoDeagle.TIRO : EstadoDeagle.TIRO_ULTIMO);
             stack.set(Registros.ESTADO_DEAGLE.get(), e.comecar(acao, level.getGameTime()));
         }
         return InteractionResultHolder.consume(stack);
@@ -55,32 +57,10 @@ public class DeagleItem extends Item {
         if (!stack.is(Registros.DEAGLE.get())) return;
         EstadoDeagle e = estado(stack);
         if (e.acao() != EstadoDeagle.PARADO) return;
-        boolean criativo = jogador.getAbilities().instabuild;
-        // os cartuchos saem como as flechas do arco: primeiro os da outra mão, depois na ordem do inventário
-        List<ItemStack> pilhas = new ArrayList<>();
-        pilhas.add(jogador.getOffhandItem());
-        pilhas.addAll(jogador.getInventory().items);
-        int precisa = Pente.CAPACIDADE - e.pente();
-        List<Integer> fila = new ArrayList<>();
-        for (ItemStack pilha : pilhas) {
-            if (!(pilha.getItem() instanceof CartuchoItem cartucho) || cartucho.calibre != Calibre.C50) continue;
-            for (int k = 0; k < pilha.getCount() && fila.size() < precisa; k++) fila.add(cartucho.tipo.ordinal());
-        }
-        if (criativo) {
-            while (fila.size() < precisa) fila.add(TipoBala.COMUM.ordinal());   // no criativo nunca falta
-        }
-        Pente.Plano plano = Pente.planejar(e.pente(), e.tipos(), fila.stream().mapToInt(Integer::intValue).toArray());
+        int[] fila = Municao.fila(jogador, Calibre.C50, Pente.CAPACIDADE - e.pente());
+        Pente.Plano plano = Pente.planejar(e.pente(), e.tipos(), fila);
         if (plano.usados() == 0) return;
-        if (!criativo) {
-            int gastar = plano.usados();
-            for (ItemStack pilha : pilhas) {
-                if (gastar == 0) break;
-                if (!(pilha.getItem() instanceof CartuchoItem cartucho) || cartucho.calibre != Calibre.C50) continue;
-                int tira = Math.min(gastar, pilha.getCount());
-                pilha.shrink(tira);
-                gastar -= tira;
-            }
-        }
+        Municao.gastar(jogador, Calibre.C50, plano.usados());
         stack.set(Registros.ESTADO_DEAGLE.get(),
                 e.comecarRecarga(jogador.level().getGameTime(), plano.pente(), plano.tipos()));
     }
@@ -104,13 +84,17 @@ public class DeagleItem extends Item {
     private void tickTiro(ItemStack stack, Level level, Player jogador, EstadoDeagle e, long dt) {
         if (dt == Tempos.tick(TemposDeagle.TIRO_DISPARO)) {
             TipoBala bala = TipoBala.de(e.tipoCamara());
-            // o ferrolho volta trazendo a de cima do pente para a câmara (ou fica aberto, se o pente acabou)
-            Pente.Carga depois = Pente.subir(e.pente(), e.tipos());
-            stack.set(Registros.ESTADO_DEAGLE.get(),
-                    e.comCarga(depois.pente(), depois.tipos(), depois.camara(), depois.tipoCamara()));
+            // o ferrolho volta trazendo a de cima do pente para a câmara (ou fica aberto, se o pente acabou); a bala
+            // infinita não sai da câmara
+            if (!bala.infinito()) {
+                Pente.Carga depois = Pente.subir(e.pente(), e.tipos());
+                stack.set(Registros.ESTADO_DEAGLE.get(),
+                        e.comCarga(depois.pente(), depois.tipos(), depois.camara(), depois.tipoCamara()));
+            }
             level.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), Registros.SOM_TIRO_DEAGLE.get(),
                     SoundSource.PLAYERS, 4.0f, 0.95f + level.random.nextFloat() * 0.1f);
-            Disparo.atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack, bala.dano(Calibre.C50));
+            Disparo.atirar((ServerLevel) level, jogador, jogador.getOffhandItem() == stack, bala,
+                    bala.dano(Calibre.C50));
         }
         if (e.acao() == EstadoDeagle.TIRO_ULTIMO && dt == Tempos.tick(TemposDeagle.TIRO_TRAVA)) {
             som(level, jogador, Registros.SOM_TRAVA.get(), 1.0f);
@@ -157,7 +141,8 @@ public class DeagleItem extends Item {
             int n = Pente.contar(e.pente(), e.tipos(), e.camara(), e.tipoCamara(), t.ordinal());
             if (n > 0) {
                 linhas.add(Component.translatable("item.revolver.revolver.tipo", n,
-                                Component.translatable("item.revolver." + t.item(Calibre.C50)), (int) t.dano(Calibre.C50))
+                                Component.translatable("item.revolver." + t.item(Calibre.C50)),
+                                CartuchoItem.textoDano(t.dano(Calibre.C50)))
                         .withStyle(ChatFormatting.DARK_GRAY));
             }
         }

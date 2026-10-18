@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -45,6 +46,9 @@ public final class Registros {
             ITENS.register("revolver", () -> new RevolverItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<DeagleItem> DEAGLE =
             ITENS.register("deagle", () -> new DeagleItem(new Item.Properties().stacksTo(1)));
+    /** A Bandoleira do Fim: munição infinita com ela no inventário ({@link Municao}). */
+    public static final DeferredItem<BandoleiraItem> BANDOLEIRA = ITENS.register("bandoleira_do_fim",
+            () -> new BandoleiraItem(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.EPIC)));
     /** Os cartuchos .45, um por tipo, na ordem do {@link TipoBala}; o comum continua com o nome da 1.0 ("cartucho_45"). */
     public static final Map<TipoBala, DeferredItem<CartuchoItem>> CARTUCHOS = cartuchos(Calibre.C45);
     /** Os cartuchos .50 AE da deagle. */
@@ -66,7 +70,9 @@ public final class Registros {
         Map<TipoBala, DeferredItem<CartuchoItem>> mapa = new EnumMap<>(TipoBala.class);
         for (TipoBala tipo : TipoBala.values()) {
             Item.Properties p = new Item.Properties().stacksTo(64);
-            if (tipo == TipoBala.NETHERITE) p = p.fireResistant();
+            if (tipo.ordinal() >= TipoBala.NETHERITE.ordinal()) p = p.fireResistant();
+            if (tipo.infinito()) p = p.rarity(Rarity.EPIC);
+            else if (tipo.mod != null) p = p.rarity(Rarity.RARE);
             Item.Properties final_ = p;
             mapa.put(tipo, ITENS.register(tipo.item(calibre), () -> new CartuchoItem(calibre, tipo, final_)));
         }

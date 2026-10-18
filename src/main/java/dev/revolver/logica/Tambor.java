@@ -61,13 +61,21 @@ public final class Tambor {
         return false;
     }
 
-    /** Tipo de bala (número do {@link TipoBala}) guardado para a câmara: também 2 bits por câmara. */
+    /** Tipo de bala (número do {@link TipoBala}) guardado para a câmara: 4 bits por câmara (2 até a 2.2.0). */
     public static int tipo(int tipos, int camara) {
-        return estado(tipos, camara);
+        return (tipos >> (4 * camara)) & 15;
     }
 
     public static int comTipo(int tipos, int camara, int tipo) {
-        return com(tipos, camara, tipo);
+        int deslocamento = 4 * camara;
+        return (tipos & ~(15 << deslocamento)) | ((tipo & 15) << deslocamento);
+    }
+
+    /** Converte tipos guardados no formato antigo (2 bits por lugar) para o de agora (4 bits). */
+    public static int de2Para4Bits(int tipos, int lugares) {
+        int novo = 0;
+        for (int i = 0; i < lugares; i++) novo |= ((tipos >> (2 * i)) & 3) << (4 * i);
+        return novo;
     }
 
     /** O que a recarga vai fazer: as câmaras que recebem bala nova (bit por câmara) e o tipo de cada uma. */

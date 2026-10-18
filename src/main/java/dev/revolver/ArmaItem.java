@@ -90,10 +90,11 @@ public class ArmaItem extends Item {
     /** A bala de cima sai: o dano é o do tipo dela. */
     private void disparar(ItemStack stack, ServerLevel level, Player jogador, EstadoArma e) {
         TipoBala tipo = TipoBala.de(e.municao().get(0));
-        stack.set(Registros.ESTADO_ARMA.get(), e.comMunicao(Carregador.semAProxima(e.municao())));
+        // a bala infinita não sai: a próxima é ela de novo
+        stack.set(Registros.ESTADO_ARMA.get(), tipo.infinito() ? e : e.comMunicao(Carregador.semAProxima(e.municao())));
         level.playSound(null, jogador.getX(), jogador.getY(), jogador.getZ(), Registros.somPorNome(arma.somTiro),
                 SoundSource.PLAYERS, 4.0f, 0.95f + level.random.nextFloat() * 0.1f);
-        Disparo.atirar(level, jogador, jogador.getOffhandItem() == stack, arma.dano(tipo), arma.bagos(),
+        Disparo.atirar(level, jogador, jogador.getOffhandItem() == stack, tipo, arma.dano(tipo), arma.bagos(),
                 arma.espalhamento);
     }
 
@@ -118,9 +119,9 @@ public class ArmaItem extends Item {
             return;
         }
         // escopeta: o cartucho desta volta entra no tubo; se ainda cabe e tem cartucho, começa a próxima
-        int tipo = tirarCartucho(jogador);
+        int tipo = Municao.tirarUm(jogador, arma.calibre);
         EstadoArma depois = tipo < 0 ? e.parado() : e.comMunicao(Carregador.comUmNoTubo(e.municao(), tipo));
-        if (tipo >= 0 && depois.municao().size() < arma.capacidade && temCartucho(jogador)) {
+        if (tipo >= 0 && depois.municao().size() < arma.capacidade && Municao.temAlgum(jogador, arma.calibre)) {
             depois = depois.comecar(EstadoArma.RECARGA, level.getGameTime());
         } else {
             depois = depois.parado();
@@ -147,60 +148,15 @@ public class ArmaItem extends Item {
         if (e.acao() != EstadoArma.PARADO) return;
         long agora = jogador.level().getGameTime();
         if (arma.tubo) {
-            if (e.municao().size() >= arma.capacidade || !item.temCartucho(jogador)) return;
+            if (e.municao().size() >= arma.capacidade || !Municao.temAlgum(jogador, arma.calibre)) return;
             stack.set(Registros.ESTADO_ARMA.get(), e.comecar(EstadoArma.RECARGA, agora));
             return;
         }
-        int precisa = arma.capacidade - e.municao().size();
-        List<Integer> fila = new ArrayList<>();
-        for (ItemStack pilha : item.pilhas(jogador)) {
-            for (int k = 0; k < pilha.getCount() && fila.size() < precisa; k++) {
-                fila.add(((CartuchoItem) pilha.getItem()).tipo.ordinal());
-            }
-        }
-        boolean criativo = jogador.getAbilities().instabuild;
-        if (criativo) {
-            while (fila.size() < precisa) fila.add(TipoBala.COMUM.ordinal());   // no criativo nunca falta
-        }
-        Carregador.Plano plano = Carregador.planejar(e.municao(), fila.stream().mapToInt(Integer::intValue).toArray(),
-                arma.capacidade);
+        int[] fila = Municao.fila(jogador, arma.calibre, arma.capacidade - e.municao().size());
+        Carregador.Plano plano = Carregador.planejar(e.municao(), fila, arma.capacidade);
         if (plano.usados() == 0) return;
-        if (!criativo) {
-            int gastar = plano.usados();
-            for (ItemStack pilha : item.pilhas(jogador)) {
-                if (gastar == 0) break;
-                int tira = Math.min(gastar, pilha.getCount());
-                pilha.shrink(tira);
-                gastar -= tira;
-            }
-        }
+        Municao.gastar(jogador, arma.calibre, plano.usados());
         stack.set(Registros.ESTADO_ARMA.get(), e.comecarRecarga(agora, plano.municao()));
-    }
-
-    /** As pilhas de cartucho do calibre desta arma, como o arco procura flecha: outra mão, depois o inventário. */
-    private List<ItemStack> pilhas(Player jogador) {
-        List<ItemStack> todas = new ArrayList<>();
-        todas.add(jogador.getOffhandItem());
-        todas.addAll(jogador.getInventory().items);
-        List<ItemStack> certas = new ArrayList<>();
-        for (ItemStack p : todas) {
-            if (p.getItem() instanceof CartuchoItem c && c.calibre == arma.calibre && !p.isEmpty()) certas.add(p);
-        }
-        return certas;
-    }
-
-    private boolean temCartucho(Player jogador) {
-        return jogador.getAbilities().instabuild || !pilhas(jogador).isEmpty();
-    }
-
-    /** Escopeta: tira um cartucho do inventário (no criativo não gasta) e devolve o tipo, ou -1 se não tem. */
-    private int tirarCartucho(Player jogador) {
-        List<ItemStack> pilhas = pilhas(jogador);
-        if (pilhas.isEmpty()) return jogador.getAbilities().instabuild ? TipoBala.COMUM.ordinal() : -1;
-        ItemStack p = pilhas.get(0);
-        int tipo = ((CartuchoItem) p.getItem()).tipo.ordinal();
-        if (!jogador.getAbilities().instabuild) p.shrink(1);
-        return tipo;
     }
 
     @Override
@@ -223,7 +179,7 @@ public class ArmaItem extends Item {
             if (n > 0) {
                 linhas.add(Component.translatable("item.revolver.revolver.tipo", n,
                                 Component.translatable("item.revolver." + t.item(arma.calibre)),
-                                Math.round(arma.dano(t) * arma.bagos()))
+                                CartuchoItem.textoDano(arma.dano(t) * arma.bagos()))
                         .withStyle(ChatFormatting.DARK_GRAY));
             }
         }

@@ -1,0 +1,12 @@
+{
+  "loader": "neoforge:obj",
+  "model": "revolver:models/item/m4a1/bala_infinito.obj",
+  "flip_v": true,
+  "shade_quads": true,
+  "automatic_culling": false,
+  "emissive_ambient": false,
+  "textures": {
+    "branco": "revolver:item/m4a1/branco",
+    "particle": "revolver:item/m4a1/branco"
+  }
+}

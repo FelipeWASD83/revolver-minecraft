@@ -25,7 +25,7 @@ E as seis da 2.0.0, cada uma com o próprio projeto de modelo:
 
 - **Atirar:** botão direito. O polegar arma o cão primeiro (como num Colt de verdade), e o tiro sai logo
   depois. Sem bala na câmara, só o clique seco do cão.
-- **Recarregar:** tecla **R** (dá para trocar em Opções > Controles > Revólver). Leva uns 11 segundos e
+- **Recarregar:** tecla **Caps Lock** (era o R até a 2.3.0; dá para trocar em Opções > Controles > Armas). Leva uns 11 segundos e
   carrega uma bala por cartucho que você tiver; sem cartucho, só tira os estojos vazios. No modo criativo
   não gasta cartucho.
 - **Qual bala entra:** como as flechas no arco, primeiro os cartuchos da outra mão, depois na ordem da
@@ -39,7 +39,7 @@ E as seis da 2.0.0, cada uma com o próprio projeto de modelo:
 - **Atirar:** botão direito. O tiro sai na hora, e dá para dar uns 2 por segundo.
 - **Capacidade:** 7 no pente e 1 na câmara. Com o pente vazio, o último tiro deixa o ferrolho aberto. Aberta, o
   gatilho só dá clique.
-- **Recarregar:** a mesma tecla **R**. Troca o pente em uns 2,5 segundos. Aberta, leva uns 3 segundos, porque no
+- **Recarregar:** a mesma tecla **Caps Lock**. Troca o pente em uns 2,5 segundos. Aberta, leva uns 3 segundos, porque no
   fim o ferrolho bate para a frente e já põe uma bala na câmara. O pente novo leva as balas que sobraram no velho
   (elas saem primeiro) e completa com cartuchos .50 AE do inventário, na mesma ordem do revólver: outra mão
   primeiro, depois barra e inventário. No criativo não gasta cartucho.
@@ -51,7 +51,7 @@ E as seis da 2.0.0, cada uma com o próprio projeto de modelo:
 
 - **Atirar:** botão direito. Na AK, nas duas M4 e na metralhadora, segure o botão para a rajada (uns 10 tiros por
   segundo). Na escopeta e na sniper é um tiro por clique, e a animação já bombeia ou puxa o ferrolho.
-- **Recarregar:** a mesma tecla **R**. A recarga troca o pente (ou a caixa da metralhadora); as balas que sobraram
+- **Recarregar:** a mesma tecla **Caps Lock**. A recarga troca o pente (ou a caixa da metralhadora); as balas que sobraram
   no pente velho saem primeiro. Na escopeta a recarga põe um cartucho por vez até encher o tubo ou acabar o
   cartucho. Como nas outras armas, os cartuchos saem primeiro da outra mão, e no criativo não gasta.
 - **Luneta da sniper:** agache (Shift) com ela na mão. O zoom fecha, a imagem da luneta toma a tela e a arma some
@@ -86,7 +86,28 @@ outros):
 | Calibre 12 | Escopeta | 4 por bago, 8 bagos (32 se todos acertarem) |
 | .338 Lapua | Sniper | 50 (500 no de netherite) |
 
-As oito armas e os 24 cartuchos ficam na aba **Combate** do criativo.
+Os cartuchos com material de outro mod (2.3.0) existem em todos os calibres; o dano é o do .45 abaixo vezes o
+multiplicador do calibre, como nos outros. Sem o mod do material, a receita não aparece e o cartucho sai da aba do
+criativo.
+
+| Tipo | Mod | Material | Dano no .45 | Extra |
+|---|---|---|---|---|
+| Ardente | Twilight Forest | barra ardente (fiery ingot) | 250 | fogo por 5 s |
+| Insanium | Mystical Agradditions | barra de insanium | 300 | |
+| Ignitium | L_Ender's Cataclysm | barra de ignitium | 350 | fogo por 8 s |
+| Dracônico | Draconic Evolution | barra de draconium desperto | 500 | |
+| Matéria vermelha | ProjectE | matéria vermelha | 600 | |
+| Antimatéria | Mekanism | pelota de antimatéria | 800 | explode sem quebrar bloco |
+| Infinito | Avaritia | barra infinita | infinito | mata o que acertar e nunca acaba |
+
+## Bandoleira do Fim
+
+Com a bandoleira em qualquer lugar do inventário, recarregar não gasta cartucho: a arma enche com o melhor cartucho
+daquele calibre que você tiver (um basta), ou com o comum se não tiver nenhum. Receita: ovo do dragão no centro,
+estrela do Nether nos quatro cantos, bloco de netherite dos lados, totem da imortalidade em cima e elytra embaixo. O
+ovo do dragão só existe um por mundo.
+
+As oito armas, a bandoleira e os cartuchos ficam na aba **Combate** do criativo.
 
 ## Receitas
 
@@ -112,6 +133,8 @@ As oito armas e os 24 cartuchos ficam na aba **Combate** do criativo.
 | 6 cartuchos calibre 12 | três pepitas em cima; papel, pólvora e papel no meio; barra de cobre embaixo |
 | 4 cartuchos .338 | pólvora, pepita e pólvora em cima; pólvora, barra de cobre e pólvora embaixo |
 | Cartuchos de aço, diamante e netherite das armas novas | como os outros: 8 do anterior em volta de barra de ferro, diamante ou barra de netherite |
+| 8 cartuchos com material de mod (1 no infinito) | 8 cartuchos de netherite do mesmo calibre em volta do material (tabela em Balas) |
+| Bandoleira do Fim | ver acima |
 
 ## Como instalar
 
@@ -119,7 +142,7 @@ Já existe uma instância só com este mod no Prism, a **"Revólver (teste do mo
 NeoForge 21.1.251, a mesma base da "Horizonte Infinito", com as suas opções de vídeo e controles). É só
 abrir o Prism e jogar nela.
 
-Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-2.2.0.jar`) para a
+Para pôr em outra instância NeoForge 1.21.1, copie o jar de `build\libs` (hoje `revolver-neoforge-1.21.1-2.3.0.jar`) para a
 pasta `mods` dela. Para gerar o jar: `.\gradlew.bat build` nesta pasta. Depois de gerar de novo, copie o
 jar de novo para a instância (o arquivo lá não se atualiza sozinho).
 

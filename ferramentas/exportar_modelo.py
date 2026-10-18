@@ -59,7 +59,7 @@ TIPOS = [
     ("aco", "cartucho_45_aco", (0.82, 0.84, 0.88), (0.66, 0.68, 0.73), (0.93, 0.94, 0.96)),
     ("diamante", "cartucho_45_diamante", (0.38, 0.90, 0.86), (0.20, 0.70, 0.68), (0.60, 0.97, 0.94)),
     ("netherite", "cartucho_45_netherite", (0.32, 0.27, 0.29), (0.22, 0.18, 0.20), (0.45, 0.40, 0.42)),
-]
+] + [(n, "cartucho_45" + suf, p, e, c) for n, suf, p, e, c in comum.TIPOS_MOD]
 
 # Como o item aparece em cada lugar: giro (graus, XYZ como no JSON do Minecraft), escala e onde o centro da
 # pegada deve cair (em blocos, no espaço da mão). A translação do JSON sai daqui. Ajuste fino depois de ver no
